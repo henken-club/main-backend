@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.9.1
+          cache: yarn
+      - uses: bahmutov/npm-install@v1
+      - run: yarn run lint:eslint
+
+  prettier:
+    name: Prettier
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.9.1
+          cache: yarn
+      - uses: bahmutov/npm-install@v1
+      - run: yarn run lint:prettier
+
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.9.1
+          cache: yarn
+      - uses: bahmutov/npm-install@v1
+      - run: yarn run typecheck
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.9.1
+          cache: yarn
+      - uses: bahmutov/npm-install@v1
+      - run: yarn run build
