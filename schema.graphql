@@ -1,0 +1,16 @@
+type HenkenEntity implements Node {
+  id: ID!
+}
+
+interface Node {
+  id: ID!
+}
+
+type FindHenkenPayload {
+  henken: HenkenEntity
+}
+
+type Query {
+  henken(id: ID!): HenkenEntity!
+  findHenken(id: ID!): FindHenkenPayload!
+}
