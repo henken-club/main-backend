@@ -5,14 +5,9 @@ import {FindUserArgs, FindUserPayload} from './dto/find-users.dto';
 import {UserEntity} from './user.entity';
 import {UsersService} from './users.service';
 
-import {AnswersService} from '~/answers/answers.service';
-
 @Resolver(() => UserEntity)
 export class UsersResolver {
-  constructor(
-    private readonly service: UsersService,
-    private readonly answer: AnswersService,
-  ) {}
+  constructor(private readonly service: UsersService) {}
 
   @Query(() => UserEntity, {name: 'user'})
   async getHenken(
