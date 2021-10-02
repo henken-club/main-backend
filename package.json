@@ -7,6 +7,8 @@
     "debug": "nest start --watch --debug ",
     "start": "nest start",
     "generate-schema": "ts-node -r tsconfig-paths/register src/generate-schema.ts",
+    "generate": "run-p -cln generate:*",
+    "generate:prisma": "prisma generate",
     "typecheck": "tsc --noEmit",
     "lint": "run-s -cn lint:*",
     "lint:eslint": "eslint . --ext .js,.ts --cache",
