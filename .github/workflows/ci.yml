@@ -57,7 +57,7 @@ jobs:
       - run: yarn run typecheck
 
   schema-generate:
-    name: codegen
+    name: Schema Generate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
