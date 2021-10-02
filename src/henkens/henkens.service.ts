@@ -10,7 +10,14 @@ export class HenkensService {
 
   async findHenken(where: {id: string}): Promise<HenkenEntity | null> {
     return this.prisma.henken
-      .findUnique({where, select: {id: true, comment: true}})
+      .findUnique({
+        where,
+        select: {
+          id: true,
+          comment: true,
+          answer: {select: {id: true}},
+        },
+      })
       .then((result) => result || null);
   }
 }

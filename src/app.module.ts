@@ -4,6 +4,7 @@ import {ConfigModule, ConfigType} from '@nestjs/config';
 
 import {HenkensModule} from './henkens/henkens.module';
 import {AppConfig} from './app.config';
+import {AnswersModule} from './answers/answers.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import {AppConfig} from './app.config';
         ...config.graphql,
       }),
     }),
+    AnswersModule,
     HenkensModule,
   ],
 })

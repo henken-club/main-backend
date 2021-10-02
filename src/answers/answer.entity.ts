@@ -2,15 +2,13 @@ import {ObjectType, Field, ID} from '@nestjs/graphql';
 
 import {Node} from '~/interfaces/node.interface';
 
-@ObjectType('Henken', {
+@ObjectType('Answer', {
   implements: () => [Node],
 })
-export class HenkenEntity implements Node {
+export class AnswerEntity implements Node {
   @Field((type) => ID)
   id!: string;
 
   @Field((type) => String)
   comment!: string;
-
-  answer!: {id: string} | null;
 }

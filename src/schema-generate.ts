@@ -10,13 +10,17 @@ import {
 import {printSchema} from 'graphql';
 
 import {HenkensResolver} from './henkens/henkens.resolver';
+import {AnswersResolver} from './answers/answers.resolver';
 
 async function bootstrap() {
   const app = await NestFactory.create(GraphQLSchemaBuilderModule);
   await app.init();
 
   const gqlSchemaFactory = app.get(GraphQLSchemaFactory);
-  const schema = await gqlSchemaFactory.create([HenkensResolver]);
+  const schema = await gqlSchemaFactory.create([
+    AnswersResolver,
+    HenkensResolver,
+  ]);
 
   await promisify(fs.writeFile)(
     path.resolve(process.cwd(), 'schema.graphql'),
