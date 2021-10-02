@@ -53,6 +53,7 @@ jobs:
           node-version: 16.9.1
           cache: yarn
       - uses: bahmutov/npm-install@v1
+      - run: yarn run generate
       - run: yarn run typecheck
 
   build:
@@ -65,4 +66,5 @@ jobs:
           node-version: 16.9.1
           cache: yarn
       - uses: bahmutov/npm-install@v1
+      - run: yarn run generate
       - run: yarn run build
