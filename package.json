@@ -6,7 +6,7 @@
     "dev": "nest start --watch",
     "debug": "nest start --watch --debug ",
     "start": "nest start",
-    "generate-schema": "ts-node -r tsconfig-paths/register src/generate-schema.ts",
+    "schema-generate": "ts-node -r tsconfig-paths/register src/schema-generate.ts",
     "generate": "run-p -cln generate:*",
     "generate:prisma": "prisma generate",
     "typecheck": "tsc --noEmit",
