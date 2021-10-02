@@ -1,0 +1,39 @@
+type Henken implements Node {
+  id: ID!
+  comment: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  answer: Answer
+}
+
+interface Node {
+  id: ID!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type FindHenkenPayload {
+  henken: Henken
+}
+
+type Answer implements Node {
+  id: ID!
+  comment: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  henken: Henken!
+}
+
+type FindAnswerPayload {
+  henken: Answer
+}
+
+type Query {
+  answer(id: ID!): Answer!
+  findAnswer(id: ID!): FindAnswerPayload!
+  henken(id: ID!): Henken!
+  findHenken(id: ID!): FindHenkenPayload!
+}
