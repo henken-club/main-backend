@@ -8,6 +8,18 @@ import {PrismaService} from '~/prisma/prisma.service';
 export class HenkensService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getHenken(id: string): Promise<HenkenEntity> {
+    return this.prisma.henken.findUnique({
+      where: {id},
+      select: {
+        id: true,
+        comment: true,
+        answer: {select: {id: true}},
+      },
+      rejectOnNotFound: true,
+    });
+  }
+
   async findHenken(where: {id: string}): Promise<HenkenEntity | null> {
     return this.prisma.henken
       .findUnique({

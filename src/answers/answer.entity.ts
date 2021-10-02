@@ -11,4 +11,6 @@ export class AnswerEntity implements Node {
 
   @Field((type) => String)
   comment!: string;
+
+  henken!: {id: string};
 }

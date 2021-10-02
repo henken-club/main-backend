@@ -11,14 +11,25 @@ export class AnswersService {
   async getAnswer(id: string): Promise<AnswerEntity> {
     return this.prisma.answer.findUnique({
       where: {id},
-      select: {id: true, comment: true},
+      select: {
+        id: true,
+        comment: true,
+        henken: {select: {id: true}},
+      },
       rejectOnNotFound: true,
     });
   }
 
   async findHenken(where: {id: string}): Promise<AnswerEntity | null> {
     return this.prisma.answer
-      .findUnique({where, select: {id: true, comment: true}})
+      .findUnique({
+        where,
+        select: {
+          id: true,
+          comment: true,
+          henken: {select: {id: true}},
+        },
+      })
       .then((result) => result || null);
   }
 }

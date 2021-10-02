@@ -2,9 +2,9 @@ import {Module} from '@nestjs/common';
 import {GraphQLFederationModule} from '@nestjs/graphql';
 import {ConfigModule, ConfigType} from '@nestjs/config';
 
-import {HenkensModule} from './henkens/henkens.module';
 import {AppConfig} from './app.config';
-import {AnswersModule} from './answers/answers.module';
+import {AnswersResolverModule} from './answers/answers.resolver.module';
+import {HenkensResolverModule} from './henkens/henkens.resolver.module';
 
 @Module({
   imports: [
@@ -15,8 +15,8 @@ import {AnswersModule} from './answers/answers.module';
         ...config.graphql,
       }),
     }),
-    AnswersModule,
-    HenkensModule,
+    AnswersResolverModule,
+    HenkensResolverModule,
   ],
 })
 export class AppModule {}
