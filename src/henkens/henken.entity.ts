@@ -18,5 +18,8 @@ export class HenkenEntity implements Node {
   @Field((type) => GraphQLISODateTime)
   updatedAt!: Date;
 
+  postedBy!: {id: string};
+  postsTo!: {id: string};
+
   answer!: {id: string} | null;
 }

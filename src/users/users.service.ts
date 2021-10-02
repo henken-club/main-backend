@@ -8,30 +8,22 @@ import {PrismaService} from '~/prisma/prisma.service';
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getHenken(id: string): Promise<UserEntity> {
-    return this.prisma.henken.findUnique({
+  async getUser(id: string): Promise<UserEntity> {
+    return this.prisma.user.findUnique({
       where: {id},
       select: {
         id: true,
-        comment: true,
-        createdAt: true,
-        updatedAt: true,
-        answer: {select: {id: true}},
       },
       rejectOnNotFound: true,
     });
   }
 
-  async findHenken(where: {id: string}): Promise<UserEntity | null> {
-    return this.prisma.henken
+  async findUser(where: {id: string}): Promise<UserEntity | null> {
+    return this.prisma.user
       .findUnique({
         where,
         select: {
           id: true,
-          comment: true,
-          createdAt: true,
-          updatedAt: true,
-          answer: {select: {id: true}},
         },
       })
       .then((result) => result || null);

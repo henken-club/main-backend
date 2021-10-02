@@ -16,6 +16,8 @@ export class HenkensService {
         comment: true,
         createdAt: true,
         updatedAt: true,
+        postedBy: {select: {id: true}},
+        postsTo: {select: {id: true}},
         answer: {select: {id: true}},
       },
       rejectOnNotFound: true,
@@ -31,6 +33,8 @@ export class HenkensService {
           comment: true,
           createdAt: true,
           updatedAt: true,
+          postedBy: {select: {id: true}},
+          postsTo: {select: {id: true}},
           answer: {select: {id: true}},
         },
       })

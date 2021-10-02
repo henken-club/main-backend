@@ -18,7 +18,7 @@ export class UsersResolver {
   async getHenken(
     @Args('id', {type: () => ID}) id: string,
   ): Promise<UserEntity> {
-    const result = await this.service.findHenken({id});
+    const result = await this.service.findUser({id});
 
     if (!result) throw new NotFoundException();
     return result;
@@ -28,7 +28,7 @@ export class UsersResolver {
   async findHenken(
     @Args({type: () => FindUserArgs}) {id}: FindUserArgs,
   ): Promise<FindUserPayload> {
-    const result = await this.service.findHenken({id});
+    const result = await this.service.findUser({id});
 
     return {user: result};
   }
