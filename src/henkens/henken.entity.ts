@@ -8,4 +8,7 @@ import {Node} from '~/interfaces/node.interface';
 export class HenkenEntity implements Node {
   @Field((type) => ID)
   id!: string;
+
+  @Field((type) => String)
+  comment!: string;
 }

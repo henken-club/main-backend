@@ -3,8 +3,10 @@ import {Module} from '@nestjs/common';
 import {HenkensService} from './henkens.service';
 import {HenkensResolver} from './henkens.resolver';
 
+import {PrismaModule} from '~/prisma/prisma.module';
+
 @Module({
-  imports: [],
+  imports: [PrismaModule],
   providers: [HenkensResolver, HenkensService],
   exports: [HenkensService],
 })

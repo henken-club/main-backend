@@ -1,6 +1,6 @@
 import {ArgsType, Field, ID, ObjectType} from '@nestjs/graphql';
 
-import {HenkenEntity} from '../henken.type';
+import {HenkenEntity} from '../henken.entity';
 
 @ArgsType()
 export class FindHenkenArgs {

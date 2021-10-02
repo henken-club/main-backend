@@ -1,10 +1,16 @@
 import {Injectable} from '@nestjs/common';
 
-import {HenkenEntity} from './henken.type';
+import {HenkenEntity} from './henken.entity';
+
+import {PrismaService} from '~/prisma/prisma.service';
 
 @Injectable()
 export class HenkensService {
-  async findHenken(id: string): Promise<HenkenEntity | null> {
-    return null;
+  constructor(private readonly prisma: PrismaService) {}
+
+  async findHenken(where: {id: string}): Promise<HenkenEntity | null> {
+    return this.prisma.henken
+      .findUnique({where, select: {id: true, comment: true}})
+      .then((result) => result || null);
   }
 }
