@@ -1,4 +1,4 @@
-import {ObjectType, Field, ID} from '@nestjs/graphql';
+import {ObjectType, Field, ID, GraphQLISODateTime} from '@nestjs/graphql';
 
 import {Node} from '~/interfaces/node.interface';
 
@@ -11,6 +11,12 @@ export class AnswerEntity implements Node {
 
   @Field((type) => String)
   comment!: string;
+
+  @Field((type) => GraphQLISODateTime)
+  createdAt!: Date;
+
+  @Field((type) => GraphQLISODateTime)
+  updatedAt!: Date;
 
   henken!: {id: string};
 }

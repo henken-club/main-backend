@@ -14,6 +14,8 @@ export class HenkensService {
       select: {
         id: true,
         comment: true,
+        createdAt: true,
+        updatedAt: true,
         answer: {select: {id: true}},
       },
       rejectOnNotFound: true,
@@ -27,6 +29,8 @@ export class HenkensService {
         select: {
           id: true,
           comment: true,
+          createdAt: true,
+          updatedAt: true,
           answer: {select: {id: true}},
         },
       })
