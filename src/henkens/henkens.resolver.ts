@@ -1,8 +1,8 @@
 import {NotFoundException} from '@nestjs/common';
-import {Args, ID, Resolver, Query, ResolveField} from '@nestjs/graphql';
+import {Args, ID, Resolver, Query, ResolveField, Parent} from '@nestjs/graphql';
 
 import {FindHenkenArgs, FindHenkenPayload} from './dto/find-henken.dto';
-import {HenkenEntity} from './henken.entity';
+import {HenkenEdgeEntity, HenkenEntity} from './henken.entity';
 import {HenkensService} from './henkens.service';
 
 import {AnswersService} from '~/answers/answers.service';
@@ -52,5 +52,15 @@ export class HenkensResolver {
     const result = await this.service.findHenken({id});
 
     return {henken: result};
+  }
+}
+
+@Resolver(() => HenkenEdgeEntity)
+export class HenkenEdgesResolver {
+  constructor(private readonly henken: HenkensService) {}
+
+  @ResolveField((type) => HenkenEntity, {name: 'node'})
+  async resolveNode(@Parent() {node}: HenkenEdgeEntity): Promise<HenkenEntity> {
+    return this.henken.getHenken(node.id);
   }
 }

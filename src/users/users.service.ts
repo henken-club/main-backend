@@ -1,4 +1,5 @@
 import {Injectable} from '@nestjs/common';
+import {findManyCursorConnection} from '@devoxa/prisma-relay-cursor-connection';
 
 import {UserEntity} from './user.entity';
 
@@ -27,5 +28,57 @@ export class UsersService {
         },
       })
       .then((result) => result || null);
+  }
+
+  async getPostsHenkens(
+    id: string,
+    pagination: {
+      first: number | null;
+      after: string | null;
+      last: number | null;
+      before: string | null;
+    },
+    orderBy: {createdAt: 'asc' | 'desc'} | {updatedAt: 'asc' | 'desc'},
+  ) {
+    return findManyCursorConnection(
+      (args) =>
+        this.prisma.henken.findMany({
+          ...args,
+          where: {postedById: id},
+          orderBy: {...orderBy},
+          select: {id: true},
+        }),
+      () =>
+        this.prisma.henken.count({
+          where: {postedById: id},
+        }),
+      pagination,
+    );
+  }
+
+  async getReceivedHenkens(
+    id: string,
+    pagination: {
+      first: number | null;
+      after: string | null;
+      last: number | null;
+      before: string | null;
+    },
+    orderBy: null | {createdAt: 'asc' | 'desc'} | {updatedAt: 'asc' | 'desc'},
+  ) {
+    return findManyCursorConnection(
+      (args) =>
+        this.prisma.henken.findMany({
+          ...args,
+          where: {postsToId: id},
+          orderBy: {...orderBy},
+          select: {id: true},
+        }),
+      () =>
+        this.prisma.henken.count({
+          where: {postsToId: id},
+        }),
+      pagination,
+    );
   }
 }

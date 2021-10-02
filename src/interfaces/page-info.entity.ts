@@ -9,8 +9,8 @@ export class PageInfoEntity {
   hasPreviousPage!: boolean;
 
   @Field((type) => String, {nullable: true})
-  startCursor!: string | null;
+  startCursor?: string;
 
   @Field((type) => String, {nullable: true})
-  endCursor!: string | null;
+  endCursor?: string;
 }

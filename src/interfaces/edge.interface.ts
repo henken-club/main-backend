@@ -5,7 +5,7 @@ import {Node} from './node.interface';
 @InterfaceType()
 export abstract class Edge {
   @Field((type) => String)
-  edge!: string;
+  cursor!: string;
 
   @Field((type) => Node)
   node!: Node;
