@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("PRISMA_DATABASE_URL")
+}
+
+model Henken {
+  id String @id @default(cuid())
+
+  answer Answer?
+}
+
+model Answer {
+  id String @id @default(cuid())
+
+  henken   Henken @relation(fields: [henkenId], references: [id])
+  henkenId String
+}

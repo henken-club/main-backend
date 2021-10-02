@@ -1,0 +1,8 @@
+# dependencies
+package-lock.json
+
+# output
+dist/
+
+# test
+coverage/

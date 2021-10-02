@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "EditorConfig.EditorConfig",
+    "mikestead.dotenv",
+    "ms-azuretools.vscode-docker",
+    "christian-kohler.path-intellisense",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "exiasr.hadolint",
+    "streetsidesoftware.code-spell-checker"
+  ]
+}
