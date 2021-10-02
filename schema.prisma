@@ -7,6 +7,16 @@ datasource db {
   url      = env("PRISMA_DATABASE_URL")
 }
 
+model User {
+  id String @id @default(cuid())
+
+  postsHenkens    Henken[] @relation("postedBy")
+  receivedHenkens Henken[] @relation("postsTo")
+
+  postsAnswers    Answer[] @relation("answeredBy")
+  receivedAnswers Answer[] @relation("answersTo")
+}
+
 model Henken {
   id String @id @default(cuid())
 
@@ -14,6 +24,12 @@ model Henken {
   updatedAt DateTime @updatedAt
 
   comment String @default("")
+
+  postedBy   User   @relation("postedBy", fields: [postedById], references: [id])
+  postedById String
+
+  postsTo    User   @relation("postsTo", fields: [postedToId], references: [id])
+  postedToId String
 
   answer Answer?
 }
@@ -28,4 +44,10 @@ model Answer {
 
   henken   Henken @relation(fields: [henkenId], references: [id])
   henkenId String
+
+  answeredBy   User   @relation("answeredBy", fields: [answeredById], references: [id])
+  answeredById String
+
+  answersTo   User   @relation("answersTo", fields: [answersToId], references: [id])
+  answersToId String
 }

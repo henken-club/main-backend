@@ -5,6 +5,7 @@ import {ConfigModule, ConfigType} from '@nestjs/config';
 import {AppConfig} from './app.config';
 import {AnswersResolverModule} from './answers/answers.resolver.module';
 import {HenkensResolverModule} from './henkens/henkens.resolver.module';
+import {UsersResolverModule} from './users/users.resolver.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import {HenkensResolverModule} from './henkens/henkens.resolver.module';
     }),
     AnswersResolverModule,
     HenkensResolverModule,
+    UsersResolverModule,
   ],
 })
 export class AppModule {}
