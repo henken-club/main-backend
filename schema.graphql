@@ -14,11 +14,34 @@ type PageInfo {
   endCursor: String
 }
 
+type Book implements Node & Content {
+  id: ID!
+}
+
+interface Content {
+  id: ID!
+}
+
+type BookEdge implements Edge {
+  cursor: String!
+  node: Node!
+}
+
+type BookSeries implements Node & Content {
+  id: ID!
+}
+
+type BookSeriesEdge implements Edge {
+  cursor: String!
+  node: Node!
+}
+
 type Henken implements Node {
   id: ID!
   comment: String!
   createdAt: DateTime!
   updatedAt: DateTime!
+  content: ContentUnion!
   postedBy: User!
   postsTo: User!
   answer: Answer
@@ -28,6 +51,8 @@ type Henken implements Node {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+union ContentUnion = Book | BookSeries
 
 type HenkenEdge implements Edge {
   cursor: String!
