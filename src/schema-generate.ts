@@ -10,7 +10,7 @@ import {
 import {printSchema} from 'graphql';
 
 import {HenkenEdgesResolver, HenkensResolver} from './henkens/henkens.resolver';
-import {AnswersResolver} from './answers/answers.resolver';
+import {AnswerEdgesResolver, AnswersResolver} from './answers/answers.resolver';
 import {UsersResolver} from './users/users.resolver';
 
 async function bootstrap() {
@@ -20,6 +20,7 @@ async function bootstrap() {
   const gqlSchemaFactory = app.get(GraphQLSchemaFactory);
   const schema = await gqlSchemaFactory.create([
     AnswersResolver,
+    AnswerEdgesResolver,
     HenkensResolver,
     HenkenEdgesResolver,
     UsersResolver,

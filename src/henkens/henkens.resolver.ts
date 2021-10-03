@@ -19,12 +19,12 @@ export class HenkensResolver {
   ) {}
 
   @ResolveField((type) => UserEntity, {name: 'postedBy'})
-  async resolvePostedBy({postedBy}: HenkenEntity): Promise<UserEntity> {
+  async resolvePostedBy({from: postedBy}: HenkenEntity): Promise<UserEntity> {
     return this.user.getUser(postedBy.id);
   }
 
   @ResolveField((type) => UserEntity, {name: 'postsTo'})
-  async resolvePostsTo({postsTo}: HenkenEntity): Promise<UserEntity> {
+  async resolvePostsTo({to: postsTo}: HenkenEntity): Promise<UserEntity> {
     return this.user.getUser(postsTo.id);
   }
 

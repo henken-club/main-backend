@@ -10,11 +10,8 @@ datasource db {
 model User {
   id String @id @default(cuid())
 
-  postsHenkens    Henken[] @relation("postedBy")
-  receivedHenkens Henken[] @relation("postsTo")
-
-  postsAnswers    Answer[] @relation("answeredBy")
-  receivedAnswers Answer[] @relation("answersTo")
+  postsHenkens    Henken[] @relation("from")
+  receivedHenkens Henken[] @relation("to")
 }
 
 model Henken {
@@ -25,11 +22,11 @@ model Henken {
 
   comment String @default("")
 
-  postedBy   User   @relation("postedBy", fields: [postedById], references: [id])
-  postedById String
+  from   User   @relation("from", fields: [fromId], references: [id])
+  fromId String
 
-  postsTo    User   @relation("postsTo", fields: [postedToId], references: [id])
-  postedToId String
+  to   User   @relation("to", fields: [toId], references: [id])
+  toId String
 
   answer Answer?
 }
@@ -44,10 +41,4 @@ model Answer {
 
   henken   Henken @relation(fields: [henkenId], references: [id])
   henkenId String
-
-  answeredBy   User   @relation("answeredBy", fields: [answeredById], references: [id])
-  answeredById String
-
-  answersTo   User   @relation("answersTo", fields: [answersToId], references: [id])
-  answersToId String
 }

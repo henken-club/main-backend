@@ -676,6 +676,11 @@
   dependencies:
     "@cspotcode/source-map-consumer" "0.8.0"
 
+"@devoxa/prisma-relay-cursor-connection@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@devoxa/prisma-relay-cursor-connection/-/prisma-relay-cursor-connection-2.0.3.tgz#f50fe6e83da6478427a2d2b6c3f0cbcd07668860"
+  integrity sha512-eHAYAsr6Wii/c+Q0E5niI4rRtrrmMRx3XbsJXSBK8JyXr8eN4VhshhLWyh/xMD4vaPgBvzfFqRuOeNlMxfX6lQ==
+
 "@endemolshinegroup/cosmiconfig-typescript-loader@3.0.2":
   version "3.0.2"
   resolved "https://registry.npmjs.org/@endemolshinegroup/cosmiconfig-typescript-loader/-/cosmiconfig-typescript-loader-3.0.2.tgz"

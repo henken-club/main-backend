@@ -11,5 +11,5 @@
     "henken",
     "henkens"
   ],
-  "ignoreWords": ["nestjs", "dmmf", "cuid", "GraphQLISODateTime"]
+  "ignoreWords": ["nestjs", "dmmf", "cuid", "GraphQLISODateTime", "devoxa"]
 }

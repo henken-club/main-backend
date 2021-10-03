@@ -44,13 +44,13 @@ export class UsersService {
       (args) =>
         this.prisma.henken.findMany({
           ...args,
-          where: {postedById: id},
+          where: {fromId: id},
           orderBy: {...orderBy},
           select: {id: true},
         }),
       () =>
         this.prisma.henken.count({
-          where: {postedById: id},
+          where: {fromId: id},
         }),
       pagination,
     );
@@ -70,13 +70,65 @@ export class UsersService {
       (args) =>
         this.prisma.henken.findMany({
           ...args,
-          where: {postsToId: id},
+          where: {toId: id},
           orderBy: {...orderBy},
           select: {id: true},
         }),
       () =>
         this.prisma.henken.count({
-          where: {postsToId: id},
+          where: {toId: id},
+        }),
+      pagination,
+    );
+  }
+
+  async getPostsAnswers(
+    id: string,
+    pagination: {
+      first: number | null;
+      after: string | null;
+      last: number | null;
+      before: string | null;
+    },
+    orderBy: {createdAt: 'asc' | 'desc'} | {updatedAt: 'asc' | 'desc'},
+  ) {
+    return findManyCursorConnection(
+      (args) =>
+        this.prisma.answer.findMany({
+          ...args,
+          where: {henken: {toId: id}},
+          orderBy,
+          select: {id: true},
+        }),
+      () =>
+        this.prisma.answer.count({
+          where: {henken: {toId: id}},
+        }),
+      pagination,
+    );
+  }
+
+  async getReceivedAnswers(
+    id: string,
+    pagination: {
+      first: number | null;
+      after: string | null;
+      last: number | null;
+      before: string | null;
+    },
+    orderBy: {createdAt: 'asc' | 'desc'} | {updatedAt: 'asc' | 'desc'},
+  ) {
+    return findManyCursorConnection(
+      (args) =>
+        this.prisma.answer.findMany({
+          ...args,
+          where: {henken: {fromId: id}},
+          orderBy,
+          select: {id: true},
+        }),
+      () =>
+        this.prisma.answer.count({
+          where: {henken: {fromId: id}},
         }),
       pagination,
     );
