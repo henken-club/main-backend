@@ -1,12 +1,25 @@
 import {Injectable} from '@nestjs/common';
 
-import {HenkenEntity} from './henken.entity';
+import {HenkenEntity, HenkenOrder, HenkenOrderField} from './henken.entity';
 
 import {PrismaService} from '~/prisma/prisma.service';
 
 @Injectable()
 export class HenkensService {
   constructor(private readonly prisma: PrismaService) {}
+
+  convertOrder({
+    field,
+    direction,
+  }: HenkenOrder): {createdAt: 'asc' | 'desc'} | {updatedAt: 'asc' | 'desc'} {
+    switch (field) {
+      case HenkenOrderField.CREATED_AT:
+        return {createdAt: direction};
+      case HenkenOrderField.UPDATED_AT:
+        return {updatedAt: direction};
+    }
+    throw new Error(`Unexpected order field: ${field}`);
+  }
 
   async getHenken(id: string): Promise<HenkenEntity> {
     return this.prisma.henken.findUnique({
@@ -16,6 +29,8 @@ export class HenkensService {
         comment: true,
         createdAt: true,
         updatedAt: true,
+        from: {select: {id: true}},
+        to: {select: {id: true}},
         answer: {select: {id: true}},
       },
       rejectOnNotFound: true,
@@ -31,6 +46,8 @@ export class HenkensService {
           comment: true,
           createdAt: true,
           updatedAt: true,
+          from: {select: {id: true}},
+          to: {select: {id: true}},
           answer: {select: {id: true}},
         },
       })

@@ -7,6 +7,30 @@ datasource db {
   url      = env("PRISMA_DATABASE_URL")
 }
 
+model User {
+  id String @id @default(cuid())
+
+  henkenFrom Henken[] @relation("henkenFrom")
+  henkenTo   Henken[] @relation("henkenTo")
+
+  followFrom Follow[] @relation("followFrom")
+  followTo   Follow[] @relation("followTo")
+}
+
+model Follow {
+  id String @id @default(cuid())
+
+  createdAt DateTime @default(now())
+
+  from   User   @relation("followFrom", fields: [fromId], references: [id])
+  fromId String
+
+  to   User   @relation("followTo", fields: [toId], references: [id])
+  toId String
+
+  @@unique([fromId, toId])
+}
+
 model Henken {
   id String @id @default(cuid())
 
@@ -14,6 +38,12 @@ model Henken {
   updatedAt DateTime @updatedAt
 
   comment String @default("")
+
+  from   User   @relation("henkenFrom", fields: [fromId], references: [id])
+  fromId String
+
+  to   User   @relation("henkenTo", fields: [toId], references: [id])
+  toId String
 
   answer Answer?
 }
