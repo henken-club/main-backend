@@ -71,20 +71,31 @@ type AnswerConnection implements Connection {
 
 type User implements Node {
   id: ID!
+  followees(first: Int, after: String, last: Int, before: String, orderBy: FollowingOrder!): FollowingConnection!
+  followers(first: Int, after: String, last: Int, before: String, orderBy: FollowingOrder!): FollowingConnection!
   postsHenkens(first: Int, after: String, last: Int, before: String, orderBy: HenkenOrder!): HenkenConnection!
   receivedHenkens(first: Int, after: String, last: Int, before: String, orderBy: HenkenOrder!): HenkenConnection!
   postsAnswers(first: Int, after: String, last: Int, before: String, orderBy: AnswerOrder!): AnswerConnection!
   receivedAnswers(first: Int, after: String, last: Int, before: String, orderBy: AnswerOrder!): AnswerConnection!
 }
 
-input HenkenOrder {
+input FollowingOrder {
   direction: OrderDirection!
-  field: HenkenOrderField!
+  field: FollowingOrderField!
 }
 
 enum OrderDirection {
   ASC
   DESC
+}
+
+enum FollowingOrderField {
+  CREATED_AT
+}
+
+input HenkenOrder {
+  direction: OrderDirection!
+  field: HenkenOrderField!
 }
 
 enum HenkenOrderField {
@@ -108,6 +119,23 @@ type FindAnswerPayload {
 
 type FindUserPayload {
   user: User
+}
+
+type Following implements Node {
+  id: ID!
+  from: User!
+  to: User!
+}
+
+type FollowingEdge implements Edge {
+  cursor: String!
+  node: Following!
+}
+
+type FollowingConnection implements Connection {
+  edges: [FollowingEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
 }
 
 type Query {
