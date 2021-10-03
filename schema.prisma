@@ -70,8 +70,6 @@ model Content {
   type ContentType
 
   henkens Henken[]
-
-  @@unique([id, type])
 }
 
 enum ContentType {

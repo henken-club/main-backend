@@ -21,10 +21,7 @@ export class BooksService {
 
   async getBook(id: string): Promise<BookEntity> {
     const result = await this.prisma.content.findUnique({
-      where: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        id_type: {id, type: ContentType.BOOK},
-      },
+      where: {id},
       select: {id: true, type: true},
       rejectOnNotFound: true,
     });
@@ -37,10 +34,7 @@ export class BooksService {
 
   async findBook({id}: {id: string}): Promise<BookEntity | null> {
     const result = await this.prisma.content.findUnique({
-      where: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        id_type: {id, type: ContentType.BOOK},
-      },
+      where: {id},
       select: {id: true, type: true},
     });
     if (result === null) return null;
