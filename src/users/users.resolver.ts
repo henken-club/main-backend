@@ -21,9 +21,9 @@ import {FollowingsService} from '~/followings/followings.service';
 @Resolver(() => UserEntity)
 export class UsersResolver {
   constructor(
-    private readonly user: UsersService,
-    private readonly henken: HenkensService,
-    private readonly answer: AnswersService,
+    private readonly users: UsersService,
+    private readonly henkens: HenkensService,
+    private readonly answers: AnswersService,
     private readonly followings: FollowingsService,
   ) {}
 
@@ -34,7 +34,7 @@ export class UsersResolver {
     @Args({type: () => FolloweesArgs})
     {orderBy, ...pagination}: FolloweesArgs,
   ): Promise<FollowingConnectionEntity> {
-    return this.user.getFollowTo(
+    return this.users.getFollowTo(
       id,
       pagination,
       this.followings.convertOrder(orderBy),
@@ -48,7 +48,7 @@ export class UsersResolver {
     @Args({type: () => FollowersArgs})
     {orderBy, ...pagination}: FollowersArgs,
   ): Promise<FollowingConnectionEntity> {
-    return this.user.getFollowFrom(
+    return this.users.getFollowFrom(
       id,
       pagination,
       this.followings.convertOrder(orderBy),
@@ -63,10 +63,10 @@ export class UsersResolver {
     @Args({type: () => PostsHenkensArgs})
     {orderBy, ...pagination}: PostsHenkensArgs,
   ): Promise<HenkenConnectionEntity> {
-    return this.user.getPostsHenkens(
+    return this.users.getPostsHenkens(
       id,
       pagination,
-      this.henken.convertOrder(orderBy),
+      this.henkens.convertOrder(orderBy),
     );
   }
 
@@ -77,10 +77,10 @@ export class UsersResolver {
     @Args({type: () => ReceivedHenkensArgs})
     {orderBy, ...pagination}: ReceivedHenkensArgs,
   ): Promise<HenkenConnectionEntity> {
-    return this.user.getReceivedHenkens(
+    return this.users.getReceivedHenkens(
       id,
       pagination,
-      this.henken.convertOrder(orderBy),
+      this.henkens.convertOrder(orderBy),
     );
   }
 
@@ -92,10 +92,10 @@ export class UsersResolver {
     @Args({type: () => PostsAnswersArgs})
     {orderBy, ...pagination}: PostsAnswersArgs,
   ): Promise<AnswerConnectionEntity> {
-    return this.user.getPostsAnswers(
+    return this.users.getPostsAnswers(
       id,
       pagination,
-      this.answer.convertOrder(orderBy),
+      this.answers.convertOrder(orderBy),
     );
   }
 
@@ -106,10 +106,10 @@ export class UsersResolver {
     @Args({type: () => ReceivedAnswersArgs})
     {orderBy, ...pagination}: ReceivedAnswersArgs,
   ): Promise<AnswerConnectionEntity> {
-    return this.user.getReceivedAnswers(
+    return this.users.getReceivedAnswers(
       id,
       pagination,
-      this.answer.convertOrder(orderBy),
+      this.answers.convertOrder(orderBy),
     );
   }
 
@@ -117,7 +117,7 @@ export class UsersResolver {
   async getHenken(
     @Args('id', {type: () => ID}) id: string,
   ): Promise<UserEntity> {
-    const result = await this.user.findUser({id});
+    const result = await this.users.findUser({id});
 
     if (!result) throw new NotFoundException();
     return result;
@@ -127,7 +127,7 @@ export class UsersResolver {
   async findHenken(
     @Args({type: () => FindUserArgs}) {id}: FindUserArgs,
   ): Promise<FindUserPayload> {
-    const result = await this.user.findUser({id});
+    const result = await this.users.findUser({id});
 
     return {user: result};
   }

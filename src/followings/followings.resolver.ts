@@ -23,12 +23,12 @@ export class FollowingsResolver {
 
 @Resolver(() => FollowingEdgeEntity)
 export class FollowingEdgesResolver {
-  constructor(private readonly following: FollowingsService) {}
+  constructor(private readonly followings: FollowingsService) {}
 
   @ResolveField((type) => FollowingEntity, {name: 'node'})
   async resolveNode(
     @Parent() {node}: FollowingEdgeEntity,
   ): Promise<FollowingEntity> {
-    return this.following.getFollowing(node.id);
+    return this.followings.getFollowing(node.id);
   }
 }
