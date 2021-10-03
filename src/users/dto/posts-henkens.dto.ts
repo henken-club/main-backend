@@ -1,7 +1,7 @@
 import {ArgsType, Field, Int} from '@nestjs/graphql';
 
 import {HenkenOrder} from '~/henkens/henken.entity';
-import {PaginationArgs} from '~/interfaces/pagination.args';
+import {PaginationArgs} from '~/pagination/pagination.args';
 
 @ArgsType()
 export class PostsHenkensArgs extends PaginationArgs {

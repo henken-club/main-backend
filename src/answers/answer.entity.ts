@@ -8,11 +8,11 @@ import {
   InputType,
 } from '@nestjs/graphql';
 
-import {Connection} from '~/interfaces/connection.interface';
-import {Edge} from '~/interfaces/edge.interface';
-import {Node} from '~/interfaces/node.interface';
-import {OrderDirection} from '~/interfaces/order.enum';
-import {PageInfoEntity} from '~/interfaces/page-info.entity';
+import {Connection} from '~/pagination/connection.interface';
+import {Edge} from '~/pagination/edge.interface';
+import {Node} from '~/pagination/node.interface';
+import {OrderDirection} from '~/pagination/order.enum';
+import {PageInfoEntity} from '~/pagination/page-info.entity';
 
 @ObjectType('Answer', {
   implements: () => [Node],

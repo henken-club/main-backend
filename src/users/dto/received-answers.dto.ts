@@ -1,6 +1,6 @@
 import {ArgsType, Field, Int} from '@nestjs/graphql';
 
-import {PaginationArgs} from '~/interfaces/pagination.args';
+import {PaginationArgs} from '~/pagination/pagination.args';
 import {AnswerOrder} from '~/answers/answer.entity';
 
 @ArgsType()
