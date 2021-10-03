@@ -10,8 +10,25 @@ datasource db {
 model User {
   id String @id @default(cuid())
 
-  postsHenkens    Henken[] @relation("from")
-  receivedHenkens Henken[] @relation("to")
+  henkenFrom Henken[] @relation("henkenFrom")
+  henkenTo   Henken[] @relation("henkenTo")
+
+  followFrom Follow[] @relation("followFrom")
+  followTo   Follow[] @relation("followTo")
+}
+
+model Follow {
+  id String @id @default(cuid())
+
+  createdAt DateTime @default(now())
+
+  from   User   @relation("followFrom", fields: [fromId], references: [id])
+  fromId String
+
+  to   User   @relation("followTo", fields: [toId], references: [id])
+  toId String
+
+  @@unique([fromId, toId])
 }
 
 model Henken {
@@ -22,10 +39,10 @@ model Henken {
 
   comment String @default("")
 
-  from   User   @relation("from", fields: [fromId], references: [id])
+  from   User   @relation("henkenFrom", fields: [fromId], references: [id])
   fromId String
 
-  to   User   @relation("to", fields: [toId], references: [id])
+  to   User   @relation("henkenTo", fields: [toId], references: [id])
   toId String
 
   answer Answer?

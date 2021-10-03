@@ -6,6 +6,7 @@ import {AppConfig} from './app.config';
 import {AnswersResolverModule} from './answers/answers.resolver.module';
 import {HenkensResolverModule} from './henkens/henkens.resolver.module';
 import {UsersResolverModule} from './users/users.resolver.module';
+import {FollowingsResolverModule} from './followings/followings.resolver.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import {UsersResolverModule} from './users/users.resolver.module';
       }),
     }),
     AnswersResolverModule,
+    FollowingsResolverModule,
     HenkensResolverModule,
     UsersResolverModule,
   ],

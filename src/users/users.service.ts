@@ -30,6 +30,66 @@ export class UsersService {
       .then((result) => result || null);
   }
 
+  async getFollowFrom(
+    id: string,
+    pagination: {
+      first: number | null;
+      after: string | null;
+      last: number | null;
+      before: string | null;
+    },
+    orderBy: {createdAt: 'asc' | 'desc'},
+  ) {
+    return findManyCursorConnection(
+      (args) =>
+        this.prisma.follow.findMany({
+          ...args,
+          where: {fromId: id},
+          orderBy,
+          select: {
+            id: true,
+            from: {select: {id: true}},
+            to: {select: {id: true}},
+          },
+        }),
+      () =>
+        this.prisma.follow.count({
+          where: {fromId: id},
+        }),
+      pagination,
+    );
+  }
+
+  async getFollowTo(
+    id: string,
+    pagination: {
+      first: number | null;
+      after: string | null;
+      last: number | null;
+      before: string | null;
+    },
+    orderBy: {createdAt: 'asc' | 'desc'},
+  ) {
+    return findManyCursorConnection(
+      (args) =>
+        this.prisma.follow.findMany({
+          ...args,
+          where: {toId: id},
+          orderBy,
+          select: {
+            id: true,
+            from: {select: {id: true}},
+            to: {select: {id: true}},
+          },
+        }),
+      () =>
+        this.prisma.follow.count({
+          where: {toId: id},
+        }),
+      pagination,
+    );
+  }
+
   async getPostsHenkens(
     id: string,
     pagination: {

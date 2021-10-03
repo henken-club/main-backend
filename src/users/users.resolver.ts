@@ -8,11 +8,15 @@ import {UserEntity} from './user.entity';
 import {UsersService} from './users.service';
 import {PostsAnswersArgs} from './dto/posts-answers.dto';
 import {ReceivedAnswersArgs} from './dto/received-answers.dto';
+import {FolloweesArgs} from './dto/followees.dto';
+import {FollowersArgs} from './dto/followers.dto';
 
 import {HenkenConnectionEntity} from '~/henkens/henken.entity';
 import {HenkensService} from '~/henkens/henkens.service';
 import {AnswerConnectionEntity} from '~/answers/answer.entity';
 import {AnswersService} from '~/answers/answers.service';
+import {FollowingConnectionEntity} from '~/followings/following.entity';
+import {FollowingsService} from '~/followings/followings.service';
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
@@ -20,7 +24,36 @@ export class UsersResolver {
     private readonly user: UsersService,
     private readonly henken: HenkensService,
     private readonly answer: AnswersService,
+    private readonly followings: FollowingsService,
   ) {}
+
+  @ResolveField((type) => FollowingConnectionEntity, {name: 'followees'})
+  async resolveFollowees(
+    @Parent() {id}: UserEntity,
+
+    @Args({type: () => FolloweesArgs})
+    {orderBy, ...pagination}: FolloweesArgs,
+  ): Promise<FollowingConnectionEntity> {
+    return this.user.getFollowTo(
+      id,
+      pagination,
+      this.followings.convertOrder(orderBy),
+    );
+  }
+
+  @ResolveField((type) => FollowingConnectionEntity, {name: 'followers'})
+  async resolveFollowers(
+    @Parent() {id}: UserEntity,
+
+    @Args({type: () => FollowersArgs})
+    {orderBy, ...pagination}: FollowersArgs,
+  ): Promise<FollowingConnectionEntity> {
+    return this.user.getFollowFrom(
+      id,
+      pagination,
+      this.followings.convertOrder(orderBy),
+    );
+  }
 
   @ResolveField((type) => HenkenConnectionEntity, {name: 'postsHenkens'})
   async resolvePostsHenkens(

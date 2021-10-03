@@ -12,6 +12,10 @@ import {printSchema} from 'graphql';
 import {HenkenEdgesResolver, HenkensResolver} from './henkens/henkens.resolver';
 import {AnswerEdgesResolver, AnswersResolver} from './answers/answers.resolver';
 import {UsersResolver} from './users/users.resolver';
+import {
+  FollowingEdgesResolver,
+  FollowingsResolver,
+} from './followings/followings.resolver';
 
 async function bootstrap() {
   const app = await NestFactory.create(GraphQLSchemaBuilderModule);
@@ -24,6 +28,8 @@ async function bootstrap() {
     HenkensResolver,
     HenkenEdgesResolver,
     UsersResolver,
+    FollowingsResolver,
+    FollowingEdgesResolver,
   ]);
 
   await promisify(fs.writeFile)(
