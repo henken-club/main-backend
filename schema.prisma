@@ -46,6 +46,11 @@ model Henken {
   toId String
 
   answer Answer?
+
+  content   Content @relation(fields: [contentId], references: [id])
+  contentId String
+
+  @@unique([toId, contentId])
 }
 
 model Answer {
@@ -58,4 +63,18 @@ model Answer {
 
   henken   Henken @relation(fields: [henkenId], references: [id])
   henkenId String
+}
+
+model Content {
+  id   String      @id @default(uuid())
+  type ContentType
+
+  henkens Henken[]
+
+  @@unique([id, type])
+}
+
+enum ContentType {
+  BOOK
+  BOOK_SERIES
 }

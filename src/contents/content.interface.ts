@@ -1,12 +1,11 @@
 import {Field, ID, InterfaceType} from '@nestjs/graphql';
-import {ContentType} from '@prisma/client';
 
-export {ContentType} from '@prisma/client';
+export type ContentType = 'BOOK' | 'BOOK_SERIES';
 
 @InterfaceType()
-export abstract class Content<T extends ContentType> {
+export abstract class IContent {
   @Field((type) => ID)
   id!: string;
 
-  type!: T;
+  type!: ContentType;
 }

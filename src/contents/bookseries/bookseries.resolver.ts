@@ -1,4 +1,12 @@
-import {Resolver, ResolveField, Parent, Query, Args, ID} from '@nestjs/graphql';
+import {
+  Resolver,
+  ResolveField,
+  Parent,
+  Query,
+  Args,
+  ID,
+  ResolveReference,
+} from '@nestjs/graphql';
 import {NotFoundException} from '@nestjs/common';
 
 import {BookSeriesEdgeEntity, BookSeriesEntity} from './bookseries.entity';
@@ -11,6 +19,14 @@ import {
 @Resolver(() => BookSeriesEntity)
 export class BookSeriesResolver {
   constructor(private readonly service: BookSeriesService) {}
+
+  @ResolveReference()
+  async resolveReference(reference: {
+    __typename: string;
+    id: string;
+  }): Promise<BookSeriesEntity> {
+    return this.service.getBookSeries(reference.id);
+  }
 
   @Query(() => BookSeriesEntity, {name: 'bookSeries'})
   async getBookSeries(

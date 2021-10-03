@@ -4,6 +4,7 @@
   "language": "en",
   "files": ["schema.prisma", "src/**/*"],
   "words": [
+    "bookseries",
     "datamodel",
     "datasource",
     "followee",

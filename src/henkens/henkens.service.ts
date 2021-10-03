@@ -32,6 +32,7 @@ export class HenkensService {
         from: {select: {id: true}},
         to: {select: {id: true}},
         answer: {select: {id: true}},
+        content: {select: {id: true, type: true}},
       },
       rejectOnNotFound: true,
     });
@@ -49,6 +50,7 @@ export class HenkensService {
           from: {select: {id: true}},
           to: {select: {id: true}},
           answer: {select: {id: true}},
+          content: {select: {id: true, type: true}},
         },
       })
       .then((result) => result || null);

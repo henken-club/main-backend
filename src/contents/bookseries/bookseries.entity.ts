@@ -5,9 +5,10 @@ import {
   Int,
   ObjectType,
   registerEnumType,
+  Directive,
 } from '@nestjs/graphql';
 
-import {Content} from '../content.interface';
+import {IContent} from '../content.interface';
 
 import {Connection} from '~/pagination/connection.interface';
 import {Edge} from '~/pagination/edge.interface';
@@ -15,8 +16,9 @@ import {Node} from '~/pagination/node.interface';
 import {OrderDirection} from '~/pagination/order.enum';
 import {PageInfoEntity} from '~/pagination/page-info.entity';
 
-@ObjectType('BookSeries', {implements: () => [Node, Content]})
-export class BookSeriesEntity implements Node, Content<'BOOK_SERIES'> {
+@ObjectType('BookSeries', {implements: () => [Node, IContent]})
+@Directive('@key(fields: "id")')
+export class BookSeriesEntity implements Node, IContent {
   @Field((type) => ID)
   id!: string;
 
