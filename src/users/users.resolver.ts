@@ -1,4 +1,4 @@
-import {NotFoundException} from '@nestjs/common';
+import {NotFoundException, UseGuards} from '@nestjs/common';
 import {Args, ID, Resolver, Query, ResolveField, Parent} from '@nestjs/graphql';
 
 import {FindUserArgs, FindUserPayload} from './dto/find-users.dto';
@@ -17,6 +17,8 @@ import {AnswerConnectionEntity} from '~/answers/answer.entity';
 import {AnswersService} from '~/answers/answers.service';
 import {FollowingConnectionEntity} from '~/followings/following.entity';
 import {FollowingsService} from '~/followings/followings.service';
+import {Viewer, ViewerType} from '~/auth/viewer.decorator';
+import {AuthnGuard} from '~/auth/authn.guard';
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
@@ -130,5 +132,11 @@ export class UsersResolver {
     const result = await this.users.findUser({id});
 
     return {user: result};
+  }
+
+  @Query(() => UserEntity, {name: 'viewer'})
+  @UseGuards(AuthnGuard)
+  async getViewer(@Viewer() viewer: ViewerType): Promise<UserEntity> {
+    return this.users.getUser(viewer.id);
   }
 }
