@@ -1,4 +1,8 @@
-import {NotFoundException, UseGuards} from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  UseGuards,
+  NotFoundException,
+} from '@nestjs/common';
 import {Args, ID, Resolver, Query, ResolveField, Parent} from '@nestjs/graphql';
 
 import {FindUserArgs, FindUserPayload} from './dto/find-users.dto';
@@ -63,13 +67,18 @@ export class UsersResolver {
     {id}: UserEntity,
 
     @Args({type: () => PostsHenkensArgs})
-    {orderBy, ...pagination}: PostsHenkensArgs,
+    {orderBy, filter, ...pagination}: PostsHenkensArgs,
   ): Promise<HenkenConnectionEntity> {
-    return this.users.getPostsHenkens(
-      id,
-      pagination,
-      this.henkens.convertOrder(orderBy),
-    );
+    return this.users
+      .getPostsHenkens(
+        id,
+        pagination,
+        this.henkens.convertOrder(orderBy),
+        filter ? {toId: filter.to} : {},
+      )
+      .catch((error) => {
+        throw new InternalServerErrorException(error);
+      });
   }
 
   @ResolveField((type) => HenkenConnectionEntity, {name: 'receivedHenkens'})
@@ -77,13 +86,18 @@ export class UsersResolver {
     @Parent() {id}: UserEntity,
 
     @Args({type: () => ReceivedHenkensArgs})
-    {orderBy, ...pagination}: ReceivedHenkensArgs,
+    {orderBy, filter, ...pagination}: ReceivedHenkensArgs,
   ): Promise<HenkenConnectionEntity> {
-    return this.users.getReceivedHenkens(
-      id,
-      pagination,
-      this.henkens.convertOrder(orderBy),
-    );
+    return this.users
+      .getReceivedHenkens(
+        id,
+        pagination,
+        this.henkens.convertOrder(orderBy),
+        filter ? {fromId: filter.from} : {},
+      )
+      .catch((error) => {
+        throw new InternalServerErrorException(error);
+      });
   }
 
   @ResolveField((type) => AnswerConnectionEntity, {name: 'postsAnswers'})
@@ -92,12 +106,13 @@ export class UsersResolver {
     {id}: UserEntity,
 
     @Args({type: () => PostsAnswersArgs})
-    {orderBy, ...pagination}: PostsAnswersArgs,
+    {orderBy, filter, ...pagination}: PostsAnswersArgs,
   ): Promise<AnswerConnectionEntity> {
     return this.users.getPostsAnswers(
       id,
       pagination,
       this.answers.convertOrder(orderBy),
+      filter ? {fromId: filter.from} : {},
     );
   }
 
@@ -106,12 +121,13 @@ export class UsersResolver {
     @Parent() {id}: UserEntity,
 
     @Args({type: () => ReceivedAnswersArgs})
-    {orderBy, ...pagination}: ReceivedAnswersArgs,
+    {orderBy, filter, ...pagination}: ReceivedAnswersArgs,
   ): Promise<AnswerConnectionEntity> {
     return this.users.getReceivedAnswers(
       id,
       pagination,
       this.answers.convertOrder(orderBy),
+      filter ? {toId: filter.to} : {},
     );
   }
 
