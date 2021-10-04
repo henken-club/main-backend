@@ -1,7 +1,13 @@
-import {ArgsType, Field, Int} from '@nestjs/graphql';
+import {ArgsType, Field, ID, InputType, Int} from '@nestjs/graphql';
 
 import {PaginationArgs} from '~/pagination/pagination.args';
 import {AnswerOrder} from '~/answers/answer.entity';
+
+@InputType()
+export class UserReceivedAnswersFilter {
+  @Field(() => ID)
+  to!: string;
+}
 
 @ArgsType()
 export class ReceivedAnswersArgs extends PaginationArgs {
@@ -19,4 +25,7 @@ export class ReceivedAnswersArgs extends PaginationArgs {
 
   @Field(() => AnswerOrder)
   orderBy!: AnswerOrder;
+
+  @Field(() => UserReceivedAnswersFilter, {nullable: true})
+  filter!: UserReceivedAnswersFilter | null;
 }
