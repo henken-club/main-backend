@@ -111,7 +111,7 @@ export class UsersService {
         }),
       () =>
         this.prisma.henken.count({
-          where: {fromId},
+          where: {fromId, ...filter},
         }),
       pagination,
     );
@@ -138,7 +138,7 @@ export class UsersService {
         }),
       () =>
         this.prisma.henken.count({
-          where: {toId},
+          where: {toId, ...filter},
         }),
       pagination,
     );
