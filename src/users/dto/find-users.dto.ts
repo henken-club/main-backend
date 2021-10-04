@@ -4,8 +4,11 @@ import {UserEntity} from '../user.entity';
 
 @ArgsType()
 export class FindUserArgs {
-  @Field(() => ID)
-  id!: string;
+  @Field(() => ID, {nullable: true})
+  id!: string | null;
+
+  @Field(() => String, {nullable: true})
+  alias!: string | null;
 }
 
 @ObjectType()

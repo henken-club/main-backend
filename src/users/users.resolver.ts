@@ -2,6 +2,7 @@ import {
   InternalServerErrorException,
   UseGuards,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import {Args, ID, Resolver, Query, ResolveField, Parent} from '@nestjs/graphql';
 
@@ -143,9 +144,12 @@ export class UsersResolver {
 
   @Query(() => FindUserPayload, {name: 'findUser'})
   async findHenken(
-    @Args({type: () => FindUserArgs}) {id}: FindUserArgs,
+    @Args({type: () => FindUserArgs}) args: FindUserArgs,
   ): Promise<FindUserPayload> {
-    const result = await this.users.findUser({id});
+    const parsed = this.users.parseFindArgs(args);
+    if (!parsed) throw new BadRequestException();
+
+    const result = await this.users.findUser(parsed);
 
     return {user: result};
   }
