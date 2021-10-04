@@ -1,7 +1,7 @@
 import {NotFoundException} from '@nestjs/common';
 import {Args, ID, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql';
 
-import {AnswerEdgeEntity, AnswerEntity} from './answer.entity';
+import {AnswerEdgeEntity, AnswerEntity, AnswerType} from './answer.entity';
 import {AnswersService} from './answers.service';
 import {FindAnswerArgs, FindAnswerPayload} from './dto/find-answer.dto';
 
@@ -14,6 +14,11 @@ export class AnswersResolver {
     private readonly service: AnswersService,
     private readonly henken: HenkensService,
   ) {}
+
+  @ResolveField((type) => AnswerType, {name: 'type'})
+  resolveAnswerType({type}: AnswerEntity) {
+    return this.service.convertType(type);
+  }
 
   @ResolveField((type) => HenkenEntity, {name: 'henken'})
   async resolveHenken({henken}: AnswerEntity): Promise<HenkenEntity> {

@@ -21,6 +21,8 @@ export class AnswerEntity implements Node {
   @Field((type) => ID)
   id!: string;
 
+  type!: 'RIGHT' | 'WRONG';
+
   @Field((type) => String)
   comment!: string;
 
@@ -32,6 +34,14 @@ export class AnswerEntity implements Node {
 
   henken!: {id: string};
 }
+
+export enum AnswerType {
+  RIGHT,
+  WRONG,
+}
+registerEnumType(AnswerType, {
+  name: 'AnswerType',
+});
 
 @ObjectType('AnswerEdge', {implements: () => [Edge]})
 export class AnswerEdgeEntity implements Edge {
