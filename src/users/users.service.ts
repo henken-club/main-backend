@@ -91,7 +91,7 @@ export class UsersService {
   }
 
   async getPostsHenkens(
-    id: string,
+    fromId: string,
     pagination: {
       first: number | null;
       after: string | null;
@@ -99,25 +99,26 @@ export class UsersService {
       before: string | null;
     },
     orderBy: {createdAt: 'asc' | 'desc'} | {updatedAt: 'asc' | 'desc'},
+    filter: Record<string, never> | {toId: string},
   ) {
     return findManyCursorConnection(
       (args) =>
         this.prisma.henken.findMany({
           ...args,
-          where: {fromId: id},
+          where: {fromId, ...filter},
           orderBy: {...orderBy},
           select: {id: true},
         }),
       () =>
         this.prisma.henken.count({
-          where: {fromId: id},
+          where: {fromId},
         }),
       pagination,
     );
   }
 
   async getReceivedHenkens(
-    id: string,
+    toId: string,
     pagination: {
       first: number | null;
       after: string | null;
@@ -125,18 +126,19 @@ export class UsersService {
       before: string | null;
     },
     orderBy: null | {createdAt: 'asc' | 'desc'} | {updatedAt: 'asc' | 'desc'},
+    filter: Record<string, never> | {fromId: string},
   ) {
     return findManyCursorConnection(
       (args) =>
         this.prisma.henken.findMany({
           ...args,
-          where: {toId: id},
+          where: {toId, ...filter},
           orderBy: {...orderBy},
           select: {id: true},
         }),
       () =>
         this.prisma.henken.count({
-          where: {toId: id},
+          where: {toId},
         }),
       pagination,
     );
