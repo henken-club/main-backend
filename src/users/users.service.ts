@@ -20,6 +20,7 @@ export class UsersService {
       where: {id},
       select: {
         id: true,
+        alias: true,
       },
       rejectOnNotFound: true,
     });
@@ -31,6 +32,7 @@ export class UsersService {
         where,
         select: {
           id: true,
+          alias: true,
         },
       })
       .then((result) => result || null);
