@@ -10,8 +10,8 @@ export class CreateHenkenArgs {
   @Field(() => ID)
   content!: string;
 
-  @Field(() => String, {nullable: true})
-  comment!: string | null;
+  @Field(() => String, {nullable: true, defaultValue: ''})
+  comment!: string;
 }
 
 @ObjectType()

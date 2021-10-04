@@ -55,4 +55,35 @@ export class HenkensService {
       })
       .then((result) => result || null);
   }
+
+  async createHenken({
+    from: fromId,
+    to: toId,
+    content: contentId,
+    comment,
+  }: {
+    from: string;
+    to: string;
+    content: string;
+    comment: string;
+  }): Promise<HenkenEntity> {
+    return this.prisma.henken.create({
+      data: {
+        fromId,
+        toId,
+        contentId,
+        comment,
+      },
+      select: {
+        id: true,
+        comment: true,
+        createdAt: true,
+        updatedAt: true,
+        from: {select: {id: true}},
+        to: {select: {id: true}},
+        answer: {select: {id: true}},
+        content: {select: {id: true, type: true}},
+      },
+    });
+  }
 }
