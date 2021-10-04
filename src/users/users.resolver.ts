@@ -100,12 +100,13 @@ export class UsersResolver {
     {id}: UserEntity,
 
     @Args({type: () => PostsAnswersArgs})
-    {orderBy, ...pagination}: PostsAnswersArgs,
+    {orderBy, filter, ...pagination}: PostsAnswersArgs,
   ): Promise<AnswerConnectionEntity> {
     return this.users.getPostsAnswers(
       id,
       pagination,
       this.answers.convertOrder(orderBy),
+      filter ? {fromId: filter.from} : {},
     );
   }
 
@@ -114,12 +115,13 @@ export class UsersResolver {
     @Parent() {id}: UserEntity,
 
     @Args({type: () => ReceivedAnswersArgs})
-    {orderBy, ...pagination}: ReceivedAnswersArgs,
+    {orderBy, filter, ...pagination}: ReceivedAnswersArgs,
   ): Promise<AnswerConnectionEntity> {
     return this.users.getReceivedAnswers(
       id,
       pagination,
       this.answers.convertOrder(orderBy),
+      filter ? {toId: filter.to} : {},
     );
   }
 

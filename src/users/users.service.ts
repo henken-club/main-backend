@@ -145,7 +145,7 @@ export class UsersService {
   }
 
   async getPostsAnswers(
-    id: string,
+    toId: string,
     pagination: {
       first: number | null;
       after: string | null;
@@ -153,25 +153,26 @@ export class UsersService {
       before: string | null;
     },
     orderBy: {createdAt: 'asc' | 'desc'} | {updatedAt: 'asc' | 'desc'},
+    filter: Record<string, never> | {fromId: string},
   ) {
     return findManyCursorConnection(
       (args) =>
         this.prisma.answer.findMany({
           ...args,
-          where: {henken: {toId: id}},
+          where: {henken: {toId, ...filter}},
           orderBy,
           select: {id: true},
         }),
       () =>
         this.prisma.answer.count({
-          where: {henken: {toId: id}},
+          where: {henken: {toId, ...filter}},
         }),
       pagination,
     );
   }
 
   async getReceivedAnswers(
-    id: string,
+    fromId: string,
     pagination: {
       first: number | null;
       after: string | null;
@@ -179,18 +180,19 @@ export class UsersService {
       before: string | null;
     },
     orderBy: {createdAt: 'asc' | 'desc'} | {updatedAt: 'asc' | 'desc'},
+    filter: Record<string, never> | {toId: string},
   ) {
     return findManyCursorConnection(
       (args) =>
         this.prisma.answer.findMany({
           ...args,
-          where: {henken: {fromId: id}},
+          where: {henken: {fromId, ...filter}},
           orderBy,
           select: {id: true},
         }),
       () =>
         this.prisma.answer.count({
-          where: {henken: {fromId: id}},
+          where: {henken: {fromId, ...filter}},
         }),
       pagination,
     );
