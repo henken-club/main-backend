@@ -36,7 +36,7 @@ export class AnswersResolver {
   ): Promise<FindAnswerPayload> {
     const result = await this.service.findHenken({id});
 
-    return {henken: result};
+    return {answer: result};
   }
 }
 

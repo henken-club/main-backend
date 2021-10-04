@@ -11,5 +11,5 @@ export class FindAnswerArgs {
 @ObjectType()
 export class FindAnswerPayload {
   @Field(() => AnswerEntity, {nullable: true})
-  henken!: AnswerEntity | null;
+  answer!: AnswerEntity | null;
 }
