@@ -75,6 +75,8 @@ export class HenkensResolver {
     @Viewer() viewer: ViewerType,
     @Args({type: () => CreateHenkenArgs}) args: CreateHenkenArgs,
   ): Promise<CreateHenkenPayload> {
+    if (viewer.id === args.to)
+      throw new BadRequestException('Same from and to');
     if (
       await this.service.isDuplicated({
         to: args.to,
