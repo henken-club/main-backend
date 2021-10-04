@@ -9,6 +9,12 @@ import {PrismaService} from '~/prisma/prisma.service';
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async isExistsUser(id: string): Promise<boolean> {
+    return this.prisma.user
+      .findUnique({where: {id}})
+      .then((result) => Boolean(result));
+  }
+
   async getUser(id: string): Promise<UserEntity> {
     return this.prisma.user.findUnique({
       where: {id},
