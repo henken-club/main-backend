@@ -1,14 +1,29 @@
-import {NotFoundException} from '@nestjs/common';
-import {Args, ID, Resolver, Query, ResolveField, Parent} from '@nestjs/graphql';
+import {
+  BadRequestException,
+  NotFoundException,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  Args,
+  ID,
+  Resolver,
+  Query,
+  ResolveField,
+  Parent,
+  Mutation,
+} from '@nestjs/graphql';
 
 import {FindHenkenArgs, FindHenkenPayload} from './dto/find-henken.dto';
 import {HenkenEdgeEntity, HenkenEntity} from './henken.entity';
 import {HenkensService} from './henkens.service';
+import {CreateHenkenArgs, CreateHenkenPayload} from './dto/create-henken.dto';
 
 import {AnswersService} from '~/answers/answers.service';
 import {AnswerEntity} from '~/answers/answer.entity';
 import {UserEntity} from '~/users/user.entity';
 import {UsersService} from '~/users/users.service';
+import {AuthnGuard} from '~/auth/authn.guard';
+import {Viewer, ViewerType} from '~/auth/viewer.decorator';
 
 @Resolver(() => HenkenEntity)
 export class HenkensResolver {
@@ -51,6 +66,30 @@ export class HenkensResolver {
   ): Promise<FindHenkenPayload> {
     const result = await this.service.findHenken({id});
 
+    return {henken: result};
+  }
+
+  @Mutation(() => CreateHenkenPayload, {name: 'createHenken'})
+  @UseGuards(AuthnGuard)
+  async createHenken(
+    @Viewer() viewer: ViewerType,
+    @Args({type: () => CreateHenkenArgs}) args: CreateHenkenArgs,
+  ): Promise<CreateHenkenPayload> {
+    if (viewer.id === args.to)
+      throw new BadRequestException('Same from and to');
+    if (
+      await this.service.isDuplicated({
+        to: args.to,
+        content: args.content,
+      })
+    )
+      throw new BadRequestException('Duplicated request');
+    const result = await this.service.createHenken({
+      from: viewer.id,
+      to: args.to,
+      content: args.content,
+      comment: args.comment,
+    });
     return {henken: result};
   }
 }
