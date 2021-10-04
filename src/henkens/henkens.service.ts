@@ -56,6 +56,23 @@ export class HenkensService {
       .then((result) => result || null);
   }
 
+  async isDuplicated({
+    to: toId,
+    content: contentId,
+  }: {
+    to: string;
+    content: string;
+  }): Promise<boolean> {
+    return this.prisma.henken
+      .findUnique({
+        where: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          toId_contentId: {toId, contentId},
+        },
+      })
+      .then((result) => Boolean(result));
+  }
+
   async createHenken({
     from: fromId,
     to: toId,

@@ -1,4 +1,8 @@
-import {NotFoundException, UseGuards} from '@nestjs/common';
+import {
+  BadRequestException,
+  NotFoundException,
+  UseGuards,
+} from '@nestjs/common';
 import {
   Args,
   ID,
@@ -71,6 +75,13 @@ export class HenkensResolver {
     @Viewer() viewer: ViewerType,
     @Args({type: () => CreateHenkenArgs}) args: CreateHenkenArgs,
   ): Promise<CreateHenkenPayload> {
+    if (
+      await this.service.isDuplicated({
+        to: args.to,
+        content: args.content,
+      })
+    )
+      throw new BadRequestException('Duplicated request');
     const result = await this.service.createHenken({
       from: viewer.id,
       to: args.to,
