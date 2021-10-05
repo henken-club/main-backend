@@ -154,9 +154,9 @@ export class UsersResolver {
     return {user: result};
   }
 
-  @Query(() => UserEntity, {name: 'viewer'})
+  @Query(() => UserEntity, {name: 'viewer', nullable: true})
   @UseGuards(AuthnGuard)
-  async getViewer(@Viewer() viewer: ViewerType): Promise<UserEntity> {
-    return this.users.getUser(viewer.id);
+  async getViewer(@Viewer() viewer: ViewerType): Promise<UserEntity | null> {
+    return this.users.findUser({id: viewer.id});
   }
 }
