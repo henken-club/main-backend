@@ -23,7 +23,7 @@ import {AnswersService} from '~/answers/answers.service';
 import {FollowingConnectionEntity} from '~/followings/following.entity';
 import {FollowingsService} from '~/followings/followings.service';
 import {Viewer, ViewerType} from '~/auth/viewer.decorator';
-import {AuthnGuard} from '~/auth/authn.guard';
+import {ViewerGuard} from '~/auth/viewer.gurad';
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
@@ -155,7 +155,7 @@ export class UsersResolver {
   }
 
   @Query(() => UserEntity, {name: 'viewer', nullable: true})
-  @UseGuards(AuthnGuard)
+  @UseGuards(ViewerGuard)
   async getViewer(@Viewer() viewer: ViewerType): Promise<UserEntity | null> {
     return this.users.findUser({id: viewer.id});
   }
