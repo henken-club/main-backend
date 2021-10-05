@@ -1,4 +1,5 @@
 import {Injectable} from '@nestjs/common';
+import {findManyCursorConnection} from '@devoxa/prisma-relay-cursor-connection';
 
 import {HenkenEntity, HenkenOrder, HenkenOrderField} from './henken.entity';
 
@@ -54,6 +55,36 @@ export class HenkensService {
         },
       })
       .then((result) => result || null);
+  }
+
+  async manyHenkens(
+    pagination: {
+      first: number | null;
+      after: string | null;
+      last: number | null;
+      before: string | null;
+    },
+    orderBy: {createdAt: 'asc' | 'desc'} | {updatedAt: 'asc' | 'desc'},
+  ) {
+    return findManyCursorConnection(
+      (args) =>
+        this.prisma.henken.findMany({
+          ...args,
+          orderBy,
+          select: {
+            id: true,
+            comment: true,
+            createdAt: true,
+            updatedAt: true,
+            from: {select: {id: true}},
+            to: {select: {id: true}},
+            answer: {select: {id: true}},
+            content: {select: {id: true, type: true}},
+          },
+        }),
+      () => this.prisma.henken.count({}),
+      pagination,
+    );
   }
 
   async isDuplicated({

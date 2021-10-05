@@ -14,9 +14,14 @@ import {
 } from '@nestjs/graphql';
 
 import {FindHenkenArgs, FindHenkenPayload} from './dto/find-henken.dto';
-import {HenkenEdgeEntity, HenkenEntity} from './henken.entity';
+import {
+  HenkenConnectionEntity,
+  HenkenEdgeEntity,
+  HenkenEntity,
+} from './henken.entity';
 import {HenkensService} from './henkens.service';
 import {CreateHenkenArgs, CreateHenkenPayload} from './dto/create-henken.dto';
+import {ManyHenkensArgs} from './dto/many-henkens.dto';
 
 import {AnswersService} from '~/answers/answers.service';
 import {AnswerEntity} from '~/answers/answer.entity';
@@ -67,6 +72,17 @@ export class HenkensResolver {
     const result = await this.service.findHenken({id});
 
     return {henken: result};
+  }
+
+  @Query(() => HenkenConnectionEntity, {name: 'manyHenkens'})
+  async manyHenkens(
+    @Args({type: () => ManyHenkensArgs})
+    {orderBy, ...pagination}: ManyHenkensArgs,
+  ): Promise<HenkenConnectionEntity> {
+    return this.service.manyHenkens(
+      pagination,
+      this.service.convertOrder(orderBy),
+    );
   }
 
   @Mutation(() => CreateHenkenPayload, {name: 'createHenken'})
