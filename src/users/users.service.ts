@@ -9,6 +9,16 @@ import {PrismaService} from '~/prisma/prisma.service';
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
+  parseFindArgs(args: {
+    id: string | null;
+    alias: string | null;
+  }): null | {id: string} | {alias: string} {
+    if (args.id && args.alias) return null;
+    if (args.id) return {id: args.id};
+    if (args.alias) return {alias: args.alias};
+    return null;
+  }
+
   async isExistsUser(id: string): Promise<boolean> {
     return this.prisma.user
       .findUnique({where: {id}})
@@ -26,7 +36,9 @@ export class UsersService {
     });
   }
 
-  async findUser(where: {id: string}): Promise<UserEntity | null> {
+  async findUser(
+    where: {id: string} | {alias: string},
+  ): Promise<UserEntity | null> {
     return this.prisma.user
       .findUnique({
         where,
