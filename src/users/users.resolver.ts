@@ -164,3 +164,13 @@ export class UsersResolver {
     return this.users.findUser({id: viewer.id});
   }
 }
+
+@Resolver(() => UserEdgeEntity)
+export class UserEdgesResolver {
+  constructor(private readonly users: UsersService) {}
+
+  @ResolveField((type) => UserEntity, {name: 'node'})
+  async resolveNode(@Parent() {node}: UserEdgeEntity): Promise<UserEntity> {
+    return this.users.getUser(node.id);
+  }
+}
