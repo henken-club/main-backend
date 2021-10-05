@@ -8,7 +8,8 @@ datasource db {
 }
 
 model User {
-  id String @id @default(cuid())
+  id    String @id @default(cuid())
+  alias String @unique
 
   henkenFrom Henken[] @relation("henkenFrom")
   henkenTo   Henken[] @relation("henkenTo")
