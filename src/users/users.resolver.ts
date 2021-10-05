@@ -23,7 +23,7 @@ import {AnswersService} from '~/answers/answers.service';
 import {FollowingConnectionEntity} from '~/followings/following.entity';
 import {FollowingsService} from '~/followings/followings.service';
 import {Viewer, ViewerType} from '~/auth/viewer.decorator';
-import {ViewerGuard} from '~/auth/viewer.gurad';
+import {ViewerGuard} from '~/auth/viewer.guard';
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
