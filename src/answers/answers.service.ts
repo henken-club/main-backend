@@ -1,9 +1,13 @@
 import {Injectable} from '@nestjs/common';
 
-import {AnswerEntity, AnswerOrder, AnswerOrderField} from './answer.entity';
+import {
+  AnswerEntity,
+  AnswerOrder,
+  AnswerOrderField,
+  AnswerType,
+} from './answer.entity';
 
 import {PrismaService} from '~/prisma/prisma.service';
-import {AnswerType} from '.prisma/client';
 
 @Injectable()
 export class AnswersService {
