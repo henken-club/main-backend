@@ -154,7 +154,11 @@ export class UsersResolver {
     return {user: result};
   }
 
-  @Query(() => UserEntity, {name: 'viewer', nullable: true})
+  @Query(() => UserEntity, {
+    name: 'viewer',
+    nullable: true,
+    description: 'Return current user. Return `null` if user not registered',
+  })
   @UseGuards(ViewerGuard)
   async getViewer(@Viewer() viewer: ViewerType): Promise<UserEntity | null> {
     return this.users.findUser({id: viewer.id});
