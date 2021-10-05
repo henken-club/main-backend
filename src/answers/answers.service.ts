@@ -1,12 +1,27 @@
 import {Injectable} from '@nestjs/common';
 
-import {AnswerEntity, AnswerOrder, AnswerOrderField} from './answer.entity';
+import {
+  AnswerEntity,
+  AnswerOrder,
+  AnswerOrderField,
+  AnswerType,
+} from './answer.entity';
 
 import {PrismaService} from '~/prisma/prisma.service';
 
 @Injectable()
 export class AnswersService {
   constructor(private readonly prisma: PrismaService) {}
+
+  convertType(type: AnswerEntity['type']): AnswerType {
+    switch (type) {
+      case 'RIGHT':
+        return AnswerType.RIGHT;
+      case 'WRONG':
+        return AnswerType.WRONG;
+    }
+    throw new Error(`Unexpected type field: ${type}`);
+  }
 
   convertOrder({
     field,
@@ -26,6 +41,7 @@ export class AnswersService {
       where: {id},
       select: {
         id: true,
+        type: true,
         comment: true,
         createdAt: true,
         updatedAt: true,
@@ -41,6 +57,7 @@ export class AnswersService {
         where,
         select: {
           id: true,
+          type: true,
           comment: true,
           createdAt: true,
           updatedAt: true,

@@ -59,10 +59,17 @@ model Answer {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  type AnswerType
+
   comment String @default("")
 
   henken   Henken @relation(fields: [henkenId], references: [id])
   henkenId String
+}
+
+enum AnswerType {
+  RIGHT
+  WRONG
 }
 
 model Content {
