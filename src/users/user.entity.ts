@@ -6,4 +6,7 @@ import {Node} from '~/pagination/node.interface';
 export class UserEntity implements Node {
   @Field((type) => ID)
   id!: string;
+
+  @Field((type) => String)
+  alias!: string;
 }
