@@ -1,5 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {ContentType} from '@prisma/client';
+import {findManyCursorConnection} from '@devoxa/prisma-relay-cursor-connection';
 
 import {
   BookSeriesEntity,
@@ -13,12 +14,13 @@ import {PrismaService} from '~/prisma/prisma.service';
 export class BookSeriesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  convertOrder({field, direction}: BookSeriesOrder): {
-    createdAt: 'asc' | 'desc';
-  } {
+  convertOrderBy({
+    field,
+    direction,
+  }: BookSeriesOrder): [{henkens: {_count: 'asc' | 'desc'}}, {id: 'asc'}] {
     switch (field) {
-      case BookSeriesOrderField.CREATED_AT:
-        return {createdAt: direction};
+      case BookSeriesOrderField.LINKED_HENKENS:
+        return [{henkens: {_count: direction}}, {id: 'asc'}];
     }
     throw new Error(`Unexpected order field: ${field}`);
   }
@@ -47,6 +49,31 @@ export class BookSeriesService {
         `Type (${result.type}) is not expected (${ContentType.BOOK_SERIES})`,
       );
     return result;
+  }
+
+  async manyBookSeries(
+    pagination: {
+      first: number | null;
+      after: string | null;
+      last: number | null;
+      before: string | null;
+    },
+    orderBy: ReturnType<BookSeriesService['convertOrderBy']>,
+  ) {
+    return findManyCursorConnection(
+      (args) =>
+        this.prisma.content.findMany({
+          ...args,
+          where: {type: ContentType.BOOK_SERIES},
+          orderBy,
+          select: {id: true},
+        }),
+      () =>
+        this.prisma.content.count({
+          where: {type: ContentType.BOOK_SERIES},
+        }),
+      pagination,
+    );
   }
 
   private checkContentType(content: {

@@ -46,7 +46,7 @@ export class BookConnectionEntity implements Connection {
 }
 
 export enum BookOrderField {
-  CREATED_AT,
+  LINKED_HENKENS,
 }
 registerEnumType(BookOrderField, {
   name: 'BookOrderField',

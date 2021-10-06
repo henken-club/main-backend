@@ -9,9 +9,10 @@ import {
   ResolveReference,
 } from '@nestjs/graphql';
 
-import {BookEdgeEntity, BookEntity} from './book.entity';
+import {BookConnectionEntity, BookEdgeEntity, BookEntity} from './book.entity';
 import {BooksService} from './books.service';
 import {FindBookArgs, FindBookPayload} from './dto/find-book.dto';
+import {ManyBooksArgs} from './dto/many-books.dto';
 
 @Resolver(() => BookEntity)
 export class BooksResolver {
@@ -38,6 +39,17 @@ export class BooksResolver {
   ): Promise<FindBookPayload> {
     const result = await this.service.findBook({id});
     return {book: result};
+  }
+
+  @Query(() => BookConnectionEntity, {name: 'manyBooks'})
+  async manyBooks(
+    @Args({type: () => ManyBooksArgs})
+    {orderBy, ...pagination}: ManyBooksArgs,
+  ): Promise<BookConnectionEntity> {
+    return this.service.manyBooks(
+      pagination,
+      this.service.convertOrderBy(orderBy),
+    );
   }
 }
 

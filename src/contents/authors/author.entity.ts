@@ -46,7 +46,7 @@ export class AuthorConnectionEntity implements Connection {
 }
 
 export enum AuthorOrderField {
-  CREATED_AT,
+  LINKED_HENKENS,
 }
 registerEnumType(AuthorOrderField, {
   name: 'AuthorOrderField',
