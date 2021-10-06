@@ -9,12 +9,13 @@ import {Args, ID, Resolver, Query, ResolveField, Parent} from '@nestjs/graphql';
 import {FindUserArgs, FindUserPayload} from './dto/find-users.dto';
 import {PostsHenkensArgs} from './dto/posts-henkens.dto';
 import {ReceivedHenkensArgs} from './dto/received-henkens.dto';
-import {UserEntity} from './user.entity';
+import {UserConnectionEntity, UserEdgeEntity, UserEntity} from './user.entity';
 import {UsersService} from './users.service';
 import {PostsAnswersArgs} from './dto/posts-answers.dto';
 import {ReceivedAnswersArgs} from './dto/received-answers.dto';
 import {FolloweesArgs} from './dto/followees.dto';
 import {FollowersArgs} from './dto/followers.dto';
+import {ManyUsersArgs} from './dto/many-users.args';
 
 import {HenkenConnectionEntity} from '~/henkens/henken.entity';
 import {HenkensService} from '~/henkens/henkens.service';
@@ -162,5 +163,22 @@ export class UsersResolver {
   @UseGuards(ViewerGuard)
   async getViewer(@Viewer() viewer: ViewerType): Promise<UserEntity | null> {
     return this.users.findUser({id: viewer.id});
+  }
+
+  @Query(() => UserConnectionEntity, {name: 'manyUsers'})
+  async manyUsers(
+    @Args({type: () => ManyUsersArgs}) {orderBy, ...pagination}: ManyUsersArgs,
+  ): Promise<UserConnectionEntity> {
+    return this.users.manyUser(pagination, this.users.convertOrder(orderBy));
+  }
+}
+
+@Resolver(() => UserEdgeEntity)
+export class UserEdgesResolver {
+  constructor(private readonly users: UsersService) {}
+
+  @ResolveField((type) => UserEntity, {name: 'node'})
+  async resolveNode(@Parent() {node}: UserEdgeEntity): Promise<UserEntity> {
+    return this.users.getUser(node.id);
   }
 }

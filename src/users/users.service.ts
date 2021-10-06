@@ -1,13 +1,21 @@
 import {Injectable} from '@nestjs/common';
 import {findManyCursorConnection} from '@devoxa/prisma-relay-cursor-connection';
 
-import {UserEntity} from './user.entity';
+import {UserEntity, UserOrder, UserOrderField} from './user.entity';
 
 import {PrismaService} from '~/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
+
+  convertOrder({field, direction}: UserOrder): {createdAt: 'asc' | 'desc'} {
+    switch (field) {
+      case UserOrderField.CREATED_AT:
+        return {createdAt: direction};
+    }
+    throw new Error(`Unexpected order field: ${field}`);
+  }
 
   parseFindArgs(args: {
     id: string | null;
@@ -48,6 +56,30 @@ export class UsersService {
         },
       })
       .then((result) => result || null);
+  }
+
+  async manyUser(
+    pagination: {
+      first: number | null;
+      after: string | null;
+      last: number | null;
+      before: string | null;
+    },
+    orderBy: {createdAt: 'asc' | 'desc'},
+  ) {
+    return findManyCursorConnection(
+      (args) =>
+        this.prisma.user.findMany({
+          ...args,
+          orderBy,
+          select: {
+            id: true,
+            alias: true,
+          },
+        }),
+      () => this.prisma.follow.count({}),
+      pagination,
+    );
   }
 
   async getFollowFrom(
