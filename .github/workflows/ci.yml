@@ -56,6 +56,21 @@ jobs:
       - run: yarn run generate
       - run: yarn run typecheck
 
+  schema-generate:
+    name: Schema Genearate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16.9.1
+          cache: yarn
+      - uses: bahmutov/npm-install@v1
+      - run: yarn run schema-generate
+      - run: test -z "$(git diff --name-only | grep schema.graphql)" ; exit $?
+
   build:
     name: Build
     runs-on: ubuntu-latest
