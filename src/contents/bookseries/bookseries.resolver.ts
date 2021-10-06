@@ -9,12 +9,17 @@ import {
 } from '@nestjs/graphql';
 import {NotFoundException} from '@nestjs/common';
 
-import {BookSeriesEdgeEntity, BookSeriesEntity} from './bookseries.entity';
+import {
+  BookSeriesConnectionEntity,
+  BookSeriesEdgeEntity,
+  BookSeriesEntity,
+} from './bookseries.entity';
 import {BookSeriesService} from './bookseries.service';
 import {
   FindBookSeriesArgs,
   FindBookSeriesPayload,
 } from './dto/find-bookseries.dto';
+import {ManyBookSeriesArgs} from './dto/many-bookseries.dto';
 
 @Resolver(() => BookSeriesEntity)
 export class BookSeriesResolver {
@@ -43,6 +48,17 @@ export class BookSeriesResolver {
   ): Promise<FindBookSeriesPayload> {
     const result = await this.service.findBookSeries({id});
     return {series: result};
+  }
+
+  @Query(() => BookSeriesConnectionEntity, {name: 'manyBookSeries'})
+  async manyBookSeries(
+    @Args({type: () => ManyBookSeriesArgs})
+    {orderBy, ...pagination}: ManyBookSeriesArgs,
+  ): Promise<BookSeriesConnectionEntity> {
+    return this.service.manyBookSeries(
+      pagination,
+      this.service.convertOrderBy(orderBy),
+    );
   }
 }
 

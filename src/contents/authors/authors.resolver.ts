@@ -9,9 +9,14 @@ import {
   ResolveReference,
 } from '@nestjs/graphql';
 
-import {AuthorEdgeEntity, AuthorEntity} from './author.entity';
+import {
+  AuthorConnectionEntity,
+  AuthorEdgeEntity,
+  AuthorEntity,
+} from './author.entity';
 import {AuthorsService} from './authors.service';
 import {FindAuthorArgs, FindAuthorPayload} from './dto/find-author.dto';
+import {ManyAuthorsArgs} from './dto/many-authors.dto';
 
 @Resolver(() => AuthorEntity)
 export class AuthorsResolver {
@@ -40,6 +45,17 @@ export class AuthorsResolver {
   ): Promise<FindAuthorPayload> {
     const result = await this.service.findAuthor({id});
     return {author: result};
+  }
+
+  @Query(() => AuthorConnectionEntity, {name: 'manyAuthors'})
+  async manyAuthors(
+    @Args({type: () => ManyAuthorsArgs})
+    {orderBy, ...pagination}: ManyAuthorsArgs,
+  ): Promise<AuthorConnectionEntity> {
+    return this.service.manyAuthors(
+      pagination,
+      this.service.convertOrderBy(orderBy),
+    );
   }
 }
 
