@@ -20,6 +20,12 @@ export class UserEntity implements Node {
 
   @Field((type) => String)
   alias!: string;
+
+  @Field((type) => String)
+  displayName!: string;
+
+  @Field((type) => String)
+  avatar!: string;
 }
 
 @ObjectType('UserEdge', {implements: () => [Edge]})
