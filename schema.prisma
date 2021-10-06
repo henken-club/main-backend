@@ -85,4 +85,5 @@ model Content {
 enum ContentType {
   BOOK
   BOOK_SERIES
+  AUTHOR
 }

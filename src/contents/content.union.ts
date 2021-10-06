@@ -13,6 +13,8 @@ export const ContentUnion = createUnionType({
         return BookEntity;
       case 'BOOK_SERIES':
         return BookSeriesEntity;
+      case 'AUTHOR':
+        return BookSeriesEntity;
     }
     return null;
   },
