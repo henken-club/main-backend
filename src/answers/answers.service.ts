@@ -1,4 +1,5 @@
 import {Injectable} from '@nestjs/common';
+import {findManyCursorConnection} from '@devoxa/prisma-relay-cursor-connection';
 
 import {
   AnswerEntity,
@@ -65,5 +66,26 @@ export class AnswersService {
         },
       })
       .then((result) => result || null);
+  }
+
+  async manyAnswers(
+    pagination: {
+      first: number | null;
+      after: string | null;
+      last: number | null;
+      before: string | null;
+    },
+    orderBy: {createdAt: 'asc' | 'desc'} | {updatedAt: 'asc' | 'desc'},
+  ) {
+    return findManyCursorConnection(
+      (args) =>
+        this.prisma.answer.findMany({
+          ...args,
+          orderBy,
+          select: {id: true},
+        }),
+      () => this.prisma.answer.count({}),
+      pagination,
+    );
   }
 }

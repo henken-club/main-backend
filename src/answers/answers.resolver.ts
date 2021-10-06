@@ -1,9 +1,15 @@
 import {NotFoundException} from '@nestjs/common';
 import {Args, ID, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql';
 
-import {AnswerEdgeEntity, AnswerEntity, AnswerType} from './answer.entity';
+import {
+  AnswerConnectionEntity,
+  AnswerEdgeEntity,
+  AnswerEntity,
+  AnswerType,
+} from './answer.entity';
 import {AnswersService} from './answers.service';
 import {FindAnswerArgs, FindAnswerPayload} from './dto/find-answer.dto';
+import {ManyAnswersArgs} from './dto/many-answers.dto';
 
 import {HenkensService} from '~/henkens/henkens.service';
 import {HenkenEntity} from '~/henkens/henken.entity';
@@ -42,6 +48,17 @@ export class AnswersResolver {
     const result = await this.service.findHenken({id});
 
     return {answer: result};
+  }
+
+  @Query(() => AnswerConnectionEntity, {name: 'manyAnswers'})
+  async manyAnswers(
+    @Args({type: () => ManyAnswersArgs})
+    {orderBy, ...pagination}: ManyAnswersArgs,
+  ): Promise<AnswerConnectionEntity> {
+    return this.service.manyAnswers(
+      pagination,
+      this.service.convertOrder(orderBy),
+    );
   }
 }
 
