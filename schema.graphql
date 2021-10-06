@@ -14,7 +14,47 @@ type PageInfo {
   endCursor: String
 }
 
-type Book implements Node & Content {
+type Answer implements Node {
+  id: ID!
+  comment: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  type: AnswerType!
+  henken: Henken!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum AnswerType {
+  RIGHT
+  WRONG
+}
+
+type AnswerEdge implements Edge {
+  cursor: String!
+  node: Answer!
+}
+
+type AnswerConnection implements Connection {
+  edges: [AnswerEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+interface Connection {
+  edges: [Edge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type FindAnswerPayload {
+  answer: Answer
+}
+
+type Book implements Node & Content @key(fields: "id") {
   id: ID!
 }
 
@@ -24,16 +64,16 @@ interface Content {
 
 type BookEdge implements Edge {
   cursor: String!
-  node: Node!
+  node: Book!
 }
 
-type BookSeries implements Node & Content {
+type BookSeries implements Node & Content @key(fields: "id") {
   id: ID!
 }
 
 type BookSeriesEdge implements Edge {
   cursor: String!
-  node: Node!
+  node: BookSeries!
 }
 
 type Henken implements Node {
@@ -46,11 +86,6 @@ type Henken implements Node {
   postsTo: User!
   answer: Answer
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 union ContentUnion = Book | BookSeries
 
@@ -65,43 +100,40 @@ type HenkenConnection implements Connection {
   totalCount: Int!
 }
 
-interface Connection {
-  edges: [Edge!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
+type FindBookPayload {
+  book: Book
 }
 
-type FindHenkenPayload {
-  henken: Henken
+type FindBookSeriesPayload {
+  series: BookSeries
 }
 
-type Answer implements Node {
+type Following implements Node {
   id: ID!
-  comment: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  henken: Henken!
+  from: User!
+  to: User!
 }
 
-type AnswerEdge implements Edge {
+type FollowingEdge implements Edge {
   cursor: String!
-  node: Answer!
+  node: Following!
 }
 
-type AnswerConnection implements Connection {
-  edges: [AnswerEdge!]!
+type FollowingConnection implements Connection {
+  edges: [FollowingEdge!]!
   pageInfo: PageInfo!
   totalCount: Int!
 }
 
 type User implements Node {
   id: ID!
+  alias: String!
   followees(first: Int, after: String, last: Int, before: String, orderBy: FollowingOrder!): FollowingConnection!
   followers(first: Int, after: String, last: Int, before: String, orderBy: FollowingOrder!): FollowingConnection!
-  postsHenkens(first: Int, after: String, last: Int, before: String, orderBy: HenkenOrder!): HenkenConnection!
-  receivedHenkens(first: Int, after: String, last: Int, before: String, orderBy: HenkenOrder!): HenkenConnection!
-  postsAnswers(first: Int, after: String, last: Int, before: String, orderBy: AnswerOrder!): AnswerConnection!
-  receivedAnswers(first: Int, after: String, last: Int, before: String, orderBy: AnswerOrder!): AnswerConnection!
+  postsHenkens(first: Int, after: String, last: Int, before: String, orderBy: HenkenOrder!, filter: UserPostsHenkensFilter): HenkenConnection!
+  receivedHenkens(first: Int, after: String, last: Int, before: String, orderBy: HenkenOrder!, filter: UserReceivedHenkensFilter): HenkenConnection!
+  postsAnswers(first: Int, after: String, last: Int, before: String, orderBy: AnswerOrder!, filter: UserPostsAnswersFilter): AnswerConnection!
+  receivedAnswers(first: Int, after: String, last: Int, before: String, orderBy: AnswerOrder!, filter: UserReceivedAnswersFilter): AnswerConnection!
 }
 
 input FollowingOrder {
@@ -128,6 +160,14 @@ enum HenkenOrderField {
   UPDATED_AT
 }
 
+input UserPostsHenkensFilter {
+  to: ID!
+}
+
+input UserReceivedHenkensFilter {
+  from: ID!
+}
+
 input AnswerOrder {
   direction: OrderDirection!
   field: AnswerOrderField!
@@ -138,36 +178,42 @@ enum AnswerOrderField {
   UPDATED_AT
 }
 
-type FindAnswerPayload {
-  henken: Answer
+input UserPostsAnswersFilter {
+  from: ID!
+}
+
+input UserReceivedAnswersFilter {
+  to: ID!
+}
+
+type FindHenkenPayload {
+  henken: Henken
+}
+
+type CreateHenkenPayload {
+  henken: Henken!
 }
 
 type FindUserPayload {
   user: User
 }
 
-type Following implements Node {
-  id: ID!
-  from: User!
-  to: User!
-}
-
-type FollowingEdge implements Edge {
-  cursor: String!
-  node: Following!
-}
-
-type FollowingConnection implements Connection {
-  edges: [FollowingEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
 type Query {
-  answer(id: ID!): Answer!
-  findAnswer(id: ID!): FindAnswerPayload!
   henken(id: ID!): Henken!
   findHenken(id: ID!): FindHenkenPayload!
+  answer(id: ID!): Answer!
+  findAnswer(id: ID!): FindAnswerPayload!
   user(id: ID!): User!
-  findUser(id: ID!): FindUserPayload!
+  findUser(id: ID, alias: String): FindUserPayload!
+
+  """Return current user. Return `null` if user not registered"""
+  viewer: User
+  book(id: ID!): Book!
+  findBook(id: ID!): FindBookPayload!
+  bookSeries(id: ID!): BookSeries!
+  findBookSeries(id: ID!): FindBookSeriesPayload!
+}
+
+type Mutation {
+  createHenken(to: ID!, content: ID!, comment: String = ""): CreateHenkenPayload!
 }

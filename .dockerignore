@@ -1,3 +1,6 @@
+# schema-generate
+src/schema-generate.ts
+
 # test
 test/
 *.test.ts
