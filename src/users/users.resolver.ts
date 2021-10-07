@@ -25,6 +25,7 @@ import {FollowingConnectionEntity} from '~/followings/following.entity';
 import {FollowingsService} from '~/followings/followings.service';
 import {Viewer, ViewerType} from '~/auth/viewer.decorator';
 import {ViewerGuard} from '~/auth/viewer.guard';
+import {AccountsService} from '~/account/accounts.service';
 
 @Resolver(() => UserEntity)
 export class UsersResolver {
@@ -33,6 +34,7 @@ export class UsersResolver {
     private readonly henkens: HenkensService,
     private readonly answers: AnswersService,
     private readonly followings: FollowingsService,
+    private readonly accounts: AccountsService,
   ) {}
 
   @ResolveField((type) => FollowingConnectionEntity, {name: 'followees'})
@@ -155,21 +157,23 @@ export class UsersResolver {
     return {user: result};
   }
 
+  @Query(() => UserConnectionEntity, {name: 'manyUsers'})
+  async manyUsers(
+    @Args({type: () => ManyUsersArgs}) {orderBy, ...pagination}: ManyUsersArgs,
+  ): Promise<UserConnectionEntity> {
+    return this.users.manyUser(pagination, this.users.convertOrder(orderBy));
+  }
+
   @Query(() => UserEntity, {
     name: 'viewer',
     nullable: true,
     description: 'Return current user. Return `null` if user not registered',
   })
   @UseGuards(ViewerGuard)
-  async getViewer(@Viewer() viewer: ViewerType): Promise<UserEntity | null> {
-    return this.users.findUser({id: viewer.id});
-  }
-
-  @Query(() => UserConnectionEntity, {name: 'manyUsers'})
-  async manyUsers(
-    @Args({type: () => ManyUsersArgs}) {orderBy, ...pagination}: ManyUsersArgs,
-  ): Promise<UserConnectionEntity> {
-    return this.users.manyUser(pagination, this.users.convertOrder(orderBy));
+  async getViewer(
+    @Viewer() {accountId}: ViewerType,
+  ): Promise<UserEntity | null> {
+    return this.accounts.findUser(accountId);
   }
 }
 
