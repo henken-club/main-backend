@@ -11,6 +11,9 @@ model User {
   id    String @id @default(cuid())
   alias String @unique
 
+  displayName String
+  avatar      String
+
   createdAt DateTime @default(now())
 
   henkenFrom Henken[] @relation("henkenFrom")

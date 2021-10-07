@@ -39,6 +39,8 @@ export class UsersService {
       select: {
         id: true,
         alias: true,
+        displayName: true,
+        avatar: true,
       },
       rejectOnNotFound: true,
     });
@@ -53,6 +55,8 @@ export class UsersService {
         select: {
           id: true,
           alias: true,
+          displayName: true,
+          avatar: true,
         },
       })
       .then((result) => result || null);
