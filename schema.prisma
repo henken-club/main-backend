@@ -16,7 +16,7 @@ model Account {
 
 model User {
   id          String @id @default(cuid())
-  alias       String @unique
+  alias       String @unique @db.Citext
   displayName String
   avatar      String
 

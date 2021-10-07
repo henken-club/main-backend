@@ -4,7 +4,15 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import {Args, ID, Resolver, Query, ResolveField, Parent} from '@nestjs/graphql';
+import {
+  Args,
+  ID,
+  Resolver,
+  Query,
+  ResolveField,
+  Parent,
+  Mutation,
+} from '@nestjs/graphql';
 
 import {FindUserArgs, FindUserPayload} from './dto/find-users.dto';
 import {PostsHenkensArgs} from './dto/posts-henkens.dto';
@@ -16,6 +24,7 @@ import {ReceivedAnswersArgs} from './dto/received-answers.dto';
 import {FolloweesArgs} from './dto/followees.dto';
 import {FollowersArgs} from './dto/followers.dto';
 import {ManyUsersArgs} from './dto/many-users.args';
+import {RegisterUserArgs, RegisterUserPayload} from './dto/register-user.dto';
 
 import {HenkenConnectionEntity} from '~/henkens/henken.entity';
 import {HenkensService} from '~/henkens/henkens.service';
@@ -174,6 +183,24 @@ export class UsersResolver {
     @Viewer() {accountId}: ViewerType,
   ): Promise<UserEntity | null> {
     return this.accounts.findUser(accountId);
+  }
+
+  @Mutation(() => RegisterUserPayload, {name: 'registerUser'})
+  @UseGuards(ViewerGuard)
+  async registerUser(
+    @Viewer() {accountId}: ViewerType,
+    @Args({type: () => RegisterUserArgs})
+    args: RegisterUserArgs,
+  ): Promise<RegisterUserPayload> {
+    if (await this.accounts.isExists(accountId))
+      throw new BadRequestException('Already registered');
+
+    if (!(await this.users.isUniqueAlias(args.alias)))
+      throw new BadRequestException('Not unique alias');
+
+    return this.accounts
+      .createUser(accountId, {...args})
+      .then((user) => ({user}));
   }
 }
 

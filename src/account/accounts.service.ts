@@ -40,4 +40,30 @@ export class AccountsService {
       })
       .then((result) => result?.user || null);
   }
+
+  async createUser(
+    accountId: string,
+    data: {alias: string; displayName: string; avatar: string},
+  ): Promise<UserEntity> {
+    return this.prisma.account
+      .create({
+        data: {
+          id: accountId,
+          user: {
+            create: {...data},
+          },
+        },
+        select: {
+          user: {
+            select: {
+              id: true,
+              alias: true,
+              displayName: true,
+              avatar: true,
+            },
+          },
+        },
+      })
+      .then((result) => result.user);
+  }
 }
