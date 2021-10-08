@@ -10,9 +10,11 @@ import {FollowingsResolverModule} from './followings/followings.resolver.module'
 import {BookSeriesResolverModule} from './contents/bookseries/bookseries.resolver.module';
 import {BooksResolverModule} from './contents/books/books.resolver.module';
 import {AuthorsResolverModule} from './contents/authors/authors.resolver.module';
+import {HealthModule} from './health/health.module';
 
 @Module({
   imports: [
+    HealthModule,
     GraphQLFederationModule.forRootAsync({
       imports: [ConfigModule.forFeature(AppConfig)],
       inject: [AppConfig.KEY],
