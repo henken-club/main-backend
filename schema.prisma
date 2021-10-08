@@ -7,12 +7,20 @@ datasource db {
   url      = env("PRISMA_DATABASE_URL")
 }
 
-model User {
-  id    String @id @default(cuid())
-  alias String @unique
+model Account {
+  id String @id
 
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+}
+
+model User {
+  id          String @id @default(cuid())
+  alias       String @unique @db.Citext
   displayName String
   avatar      String
+
+  accounts Account[]
 
   createdAt DateTime @default(now())
 

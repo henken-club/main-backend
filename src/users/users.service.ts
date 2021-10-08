@@ -33,6 +33,12 @@ export class UsersService {
       .then((result) => Boolean(result));
   }
 
+  async isUniqueAlias(alias: string): Promise<boolean> {
+    return this.prisma.user
+      .findUnique({where: {alias}})
+      .then((result) => !result);
+  }
+
   async getUser(id: string): Promise<UserEntity> {
     return this.prisma.user.findUnique({
       where: {id},

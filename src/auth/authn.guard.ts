@@ -6,18 +6,18 @@ import {
 } from '@nestjs/common';
 import {GqlExecutionContext} from '@nestjs/graphql';
 
-import {UsersService} from '~/users/users.service';
+import {AccountsService} from '~/account/accounts.service';
 
 @Injectable()
 export class AuthnGuard implements CanActivate {
-  constructor(private readonly user: UsersService) {}
+  constructor(private readonly accounts: AccountsService) {}
 
   async canActivate(context: ExecutionContext) {
     const ctx = GqlExecutionContext.create(context);
 
-    const userId: string | undefined =
-      ctx.getContext().req.headers['x-user-id'];
-    if (!userId || !(await this.user.isExistsUser(userId)))
+    const accountId: string | undefined =
+      ctx.getContext().req.headers['x-account-id'];
+    if (!accountId || !(await this.accounts.isExists(accountId)))
       throw new UnauthorizedException();
 
     return true;

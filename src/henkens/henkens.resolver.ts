@@ -29,6 +29,7 @@ import {UserEntity} from '~/users/user.entity';
 import {UsersService} from '~/users/users.service';
 import {AuthnGuard} from '~/auth/authn.guard';
 import {Viewer, ViewerType} from '~/auth/viewer.decorator';
+import {AccountsService} from '~/account/accounts.service';
 
 @Resolver(() => HenkenEntity)
 export class HenkensResolver {
@@ -36,6 +37,7 @@ export class HenkensResolver {
     private readonly service: HenkensService,
     private readonly user: UsersService,
     private readonly answer: AnswersService,
+    private readonly account: AccountsService,
   ) {}
 
   @ResolveField((type) => UserEntity, {name: 'postedBy'})
@@ -88,25 +90,24 @@ export class HenkensResolver {
   @Mutation(() => CreateHenkenPayload, {name: 'createHenken'})
   @UseGuards(AuthnGuard)
   async createHenken(
-    @Viewer() viewer: ViewerType,
-    @Args({type: () => CreateHenkenArgs}) args: CreateHenkenArgs,
+    @Viewer() {accountId}: ViewerType,
+    @Args({type: () => CreateHenkenArgs})
+    {to, content, ...args}: CreateHenkenArgs,
   ): Promise<CreateHenkenPayload> {
-    if (viewer.id === args.to)
-      throw new BadRequestException('Same from and to');
-    if (
-      await this.service.isDuplicated({
-        to: args.to,
-        content: args.content,
-      })
-    )
+    const from = await this.account.getUserId(accountId);
+
+    if (from === to) throw new BadRequestException('Same from and to');
+    if (await this.service.isDuplicated({to, content}))
       throw new BadRequestException('Duplicated request');
-    const result = await this.service.createHenken({
-      from: viewer.id,
-      to: args.to,
-      content: args.content,
-      comment: args.comment,
-    });
-    return {henken: result};
+
+    return this.service
+      .createHenken({
+        from,
+        to,
+        content,
+        ...args,
+      })
+      .then((henken) => ({henken}));
   }
 }
 
