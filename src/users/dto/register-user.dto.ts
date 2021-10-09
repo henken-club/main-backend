@@ -16,6 +16,6 @@ export class RegisterUserArgs {
 
 @ObjectType()
 export class RegisterUserPayload {
-  @Field(() => UserEntity, {nullable: true})
+  @Field(() => UserEntity)
   user!: UserEntity;
 }
