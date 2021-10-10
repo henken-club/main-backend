@@ -7,9 +7,6 @@ import {AnswersResolverModule} from './answers/answers.resolver.module';
 import {HenkensResolverModule} from './henkens/henkens.resolver.module';
 import {UsersResolverModule} from './users/users.resolver.module';
 import {FollowingsResolverModule} from './followings/followings.resolver.module';
-import {BookSeriesResolverModule} from './contents/bookseries/bookseries.resolver.module';
-import {BooksResolverModule} from './contents/books/books.resolver.module';
-import {AuthorsResolverModule} from './contents/authors/authors.resolver.module';
 
 @Module({
   imports: [
@@ -24,9 +21,6 @@ import {AuthorsResolverModule} from './contents/authors/authors.resolver.module'
     FollowingsResolverModule,
     HenkensResolverModule,
     UsersResolverModule,
-    BooksResolverModule,
-    BookSeriesResolverModule,
-    AuthorsResolverModule,
   ],
 })
 export class AppModule {}
