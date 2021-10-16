@@ -185,6 +185,15 @@ export class UsersResolver {
     return this.accounts.findUser(accountId);
   }
 
+  @Query(() => Boolean, {
+    name: 'isAliasUnique',
+  })
+  async isAliasUnique(
+    @Args('alias', {type: () => String}) alias: string,
+  ): Promise<boolean> {
+    return this.users.isUniqueAlias(alias);
+  }
+
   @Mutation(() => RegisterUserPayload, {name: 'registerUser'})
   @UseGuards(ViewerGuard)
   async registerUser(

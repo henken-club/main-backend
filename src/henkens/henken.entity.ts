@@ -8,8 +8,7 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 
-import {IContent} from '~/contents/content.interface';
-import {ContentUnion} from '~/contents/content.union';
+import {Content} from '~/content/content.entities';
 import {Connection} from '~/pagination/connection.interface';
 import {Edge} from '~/pagination/edge.interface';
 import {Node} from '~/pagination/node.interface';
@@ -37,8 +36,8 @@ export class HenkenEntity implements Node {
 
   answer!: {id: string} | null;
 
-  @Field(() => ContentUnion)
-  content!: IContent;
+  @Field(() => Content)
+  content!: Content;
 }
 
 @ObjectType('HenkenEdge', {implements: () => [Edge]})
